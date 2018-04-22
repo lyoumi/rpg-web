@@ -1,6 +1,6 @@
 package com.web.rpg.model.Quests.questsclasses;
 
-import com.web.rpg.model.Characters.Character;
+import com.web.rpg.model.Characters.PlayerCharacter;
 import com.web.rpg.model.Characters.characterclasses.Archer;
 import com.web.rpg.model.Characters.characterclasses.Berserk;
 import com.web.rpg.model.Items.itemsclasses.Item;
@@ -24,12 +24,12 @@ public class LegendaryQuest implements Quest {
     private final int experience;
     private final int task;
 
-    private Character character;
+    private PlayerCharacter character;
     private Item item;
 
     private int last;
 
-    private LegendaryQuest(Character character){
+    private LegendaryQuest(PlayerCharacter character){
         this.character = character;
         task = character.getLevel() * 1000;
         last = task;

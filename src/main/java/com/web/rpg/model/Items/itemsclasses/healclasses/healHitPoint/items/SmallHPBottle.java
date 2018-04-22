@@ -1,10 +1,12 @@
 package com.web.rpg.model.Items.itemsclasses.healclasses.healHitPoint.items;
 
-import com.web.rpg.model.Characters.Character;
+import com.web.rpg.model.Characters.PlayerCharacter;
 import com.web.rpg.model.Items.itemsclasses.healclasses.HealingItemsList;
 import com.web.rpg.model.Items.itemsclasses.healclasses.healHitPoint.HealingHitPointItems;
 import com.web.rpg.model.Items.itemsclasses.healclasses.healHitPoint.HealingHitPointItemsFactory;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SmallHPBottle implements HealingHitPointItems {
 
     private final int price;
@@ -24,16 +26,11 @@ public class SmallHPBottle implements HealingHitPointItems {
     }
 
     @Override
-    public void use(Character character) {
-        character.setHitPoint(character.getHitPoint() + character.getMaxHitPoint()/4);
+    public void use(PlayerCharacter character) {
+        character.setHitPoints(character.getHitPoints() + character.getMaxHitPoints()/4);
     }
 
     public static HealingHitPointItemsFactory healingHitPointItemsFactory = SmallHPBottle::new;
-
-    @Override
-    public void finalize() throws Throwable {
-        super.finalize();
-    }
 
     public String toString(){
         return SmallHPBottle.class.getSimpleName();

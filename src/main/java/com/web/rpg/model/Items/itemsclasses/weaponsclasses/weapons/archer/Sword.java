@@ -1,11 +1,11 @@
 package com.web.rpg.model.Items.itemsclasses.weaponsclasses.weapons.archer;
 
-import com.web.rpg.model.Characters.Character;
+import com.web.rpg.model.Characters.PlayerCharacter;
 import com.web.rpg.model.Items.EquipmentItems;
-import com.web.rpg.model.Items.itemsclasses.ItemsFactory;
 import com.web.rpg.model.Items.itemsclasses.weaponsclasses.Weapons;
 import com.web.rpg.model.abilities.Magic;
 import com.web.rpg.model.abilities.buffs.buffsclasses.ArchersBuff;
+import com.web.rpg.model.abilities.debuffs.debuffsclasses.damage.BurningJoe;
 
 import java.util.Random;
 
@@ -15,57 +15,27 @@ import java.util.Random;
 public class Sword implements Weapons {
 
     private int damage;
-    private int level;
-    private Character character;
+    private int itemLevel;
+    private PlayerCharacter character;
+    private Magic buff;
     private Magic magic;
+    private int price;
+    private String equipment;
 
     private Random random = new Random();
 
-    private Sword(Character character){
+    private Sword(PlayerCharacter character){
         this.character = character;
-        this.level = random.nextInt(character.getLevel() + 1);
-        this.damage = this.getItemLevel() * 5 + 5;
-        this.magic = ArchersBuff.magicFactory.getMagicFactory(character.getLevel());
+        this.itemLevel = character.getLevel() + 5;
+        this.damage = itemLevel * 9;
+        this.price = 10000 * itemLevel;
+        this.buff = ArchersBuff.magicFactory.getMagicFactory(character.getLevel());
+        this.magic = BurningJoe.magicFactory.getMagicFactory(itemLevel);
+        this.equipment = EquipmentItems.HANDS.name();
     }
 
     @Override
-    public Magic getBuff() {
-        return magic;
-    }
-
-    @Override
-    public int getPrice() {
-        return 0;
-    }
-
-    @Override
-    public int getDamage() {
-        return damage;
-    }
-
-    @Override
-    public int getItemLevel() {
-        return level;
-    }
-
-    @Override
-    public EquipmentItems EQUIPMENT_ITEMS() {
+    public EquipmentItems getEquipment() {
         return EquipmentItems.HANDS;
     }
-
-    @Override
-    public String getName() {
-        return Sword.class.getSimpleName();
-    }
-
-    public String toString(){
-        return Sword.class.getSimpleName() + ": ATK +" + getDamage();
-    }
-
-    @Override
-    public void finalize() throws Throwable {
-        super.finalize();
-    }
-
-    public static ItemsFactory itemsFactory = Sword::new;
 }

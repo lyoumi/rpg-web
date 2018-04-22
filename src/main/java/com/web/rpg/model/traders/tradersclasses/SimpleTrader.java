@@ -1,6 +1,6 @@
 package com.web.rpg.model.traders.tradersclasses;
 
-import com.web.rpg.model.Characters.Character;
+import com.web.rpg.model.Characters.PlayerCharacter;
 import com.web.rpg.ext.RandomUniqueValue;
 import com.web.rpg.model.Characters.characterclasses.Archer;
 import com.web.rpg.model.Characters.characterclasses.Berserk;
@@ -10,7 +10,7 @@ import com.web.rpg.model.Items.itemsclasses.armorsclasses.armors.LegendaryArmor;
 import com.web.rpg.model.Items.itemsclasses.armorsclasses.boots.LegendaryBoots;
 import com.web.rpg.model.Items.itemsclasses.armorsclasses.helmets.LegendaryHelmet;
 import com.web.rpg.model.Items.itemsclasses.healclasses.healHitPoint.items.BigHPBottle;
-import com.web.rpg.model.Items.itemsclasses.healclasses.healManaPoint.items.BigFlower;
+import com.web.rpg.model.Items.itemsclasses.healclasses.healManaPoint.items.BigManaPointBottle;
 import com.web.rpg.model.Items.itemsclasses.weaponsclasses.weapons.archer.LegendaryBow;
 import com.web.rpg.model.Items.itemsclasses.weaponsclasses.weapons.berserk.LegendaryBoxingGloves;
 import com.web.rpg.model.Items.itemsclasses.weaponsclasses.weapons.wizard.LegendaryStaff;
@@ -46,18 +46,18 @@ public class SimpleTrader implements Trader {
     private Map<Integer, HealingItems> priceListHealingObjects = new LinkedHashMap<>();
 
     /**
-     * Объект типа {@link Character} хранящий в себе имплементацию конкретного персонажа.
+     * Объект типа {@link PlayerCharacter} хранящий в себе имплементацию конкретного персонажа.
      */
-    private Character character;
+    private PlayerCharacter character;
 
     /**
      * Конструктор, инициализирующий map'ы предметов и объект.
      * Также вызывается метод заполняющий map'ы объектами.
      *
      * @param character
-     *              character implementation of {@link Character}
+     *              character implementation of {@link PlayerCharacter}
      */
-    private SimpleTrader(Character character){
+    private SimpleTrader(PlayerCharacter character){
         this.character = character;
         generatePriceList();
     }
@@ -72,7 +72,7 @@ public class SimpleTrader implements Trader {
         priceListEquipmentObjects.put(randomUniqueValue.nextUniqueInt(), LegendaryHelmet.itemsFactory.createNewItem(character));
         priceListEquipmentObjects.put(randomUniqueValue.nextUniqueInt(), LegendaryBoots.itemsFactory.createNewItem(character));
         priceListEquipmentObjects.put(randomUniqueValue.nextUniqueInt(), LegendaryArmor.itemsFactory.createNewItem(character));
-        priceListHealingObjects.put(randomUniqueValue.nextUniqueInt(), BigFlower.healingHitPointItemsFactory.getNewHealingManaPointItem());
+        priceListHealingObjects.put(randomUniqueValue.nextUniqueInt(), BigManaPointBottle.healingHitPointItemsFactory.getNewHealingManaPointItem());
         priceListHealingObjects.put(randomUniqueValue.nextUniqueInt(), BigHPBottle.healingHitPointItemsFactory.getNewHealingHitPointItem());
     }
 

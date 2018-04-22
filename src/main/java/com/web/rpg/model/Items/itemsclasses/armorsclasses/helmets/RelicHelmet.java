@@ -1,67 +1,39 @@
 package com.web.rpg.model.Items.itemsclasses.armorsclasses.helmets;
 
-import com.web.rpg.model.Characters.Character;
+import com.web.rpg.model.Characters.PlayerCharacter;
 import com.web.rpg.model.Items.EquipmentItems;
-import com.web.rpg.model.Items.itemsclasses.ItemsFactory;
 import com.web.rpg.model.Items.itemsclasses.armorsclasses.Armor;
 import com.web.rpg.model.abilities.Magic;
 import com.web.rpg.model.abilities.buffs.buffsclasses.ArmorBuff;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.util.UUID;
+
+@Entity
 public class RelicHelmet implements Armor {
 
+    @Id
+    private UUID id;
     private int defence;
     private int itemLevel;
-    private Character character;
+    private PlayerCharacter character;
     private Magic magic;
-    private final int price;
+    private int price;
+    private String equipment;
 
-
-    private RelicHelmet(Character character){
+    private RelicHelmet(PlayerCharacter character){
+        this.id = UUID.randomUUID();
         this.character = character;
         this.itemLevel = character.getLevel() + 20;
-        this.price = 10000*getItemLevel();
-        this.defence = getItemLevel() * 10 + 5;
-        this.magic = ArmorBuff.magicFactory.getMagicFactory(getItemLevel());
+        this.price = 10000 * itemLevel;
+        this.defence = itemLevel * 10 + 5;
+        this.magic = ArmorBuff.magicFactory.getMagicFactory(itemLevel);
+        this.equipment = EquipmentItems.HEAD.name();
     }
 
     @Override
-    public EquipmentItems EQUIPMENT_ITEMS() {
+    public EquipmentItems getEquipment() {
         return EquipmentItems.HEAD;
     }
-
-    @Override
-    public int getItemLevel() {
-        return itemLevel;
-    }
-
-    @Override
-    public int getDefence() {
-        return defence;
-    }
-
-    @Override
-    public String getName() {
-        return IronHelmet.class.getSimpleName();
-    }
-
-    @Override
-    public Magic getBuff() {
-        return magic;
-    }
-
-    @Override
-    public int getPrice() {
-        return price;
-    }
-
-    public String toString(){
-        return this.getClass().getSimpleName() + ": DEF +" + getDefence();
-    }
-
-    @Override
-    public void finalize() throws Throwable {
-        super.finalize();
-    }
-
-    public static ItemsFactory itemsFactory = RelicHelmet::new;
 }

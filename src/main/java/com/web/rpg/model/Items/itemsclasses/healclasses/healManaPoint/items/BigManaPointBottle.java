@@ -1,16 +1,18 @@
 package com.web.rpg.model.Items.itemsclasses.healclasses.healManaPoint.items;
 
-import com.web.rpg.model.Characters.Character;
+import com.web.rpg.model.Characters.PlayerCharacter;
 import com.web.rpg.model.Items.itemsclasses.healclasses.HealingItemsList;
 import com.web.rpg.model.Items.itemsclasses.healclasses.healManaPoint.HealingManaPointItems;
 import com.web.rpg.model.Items.itemsclasses.healclasses.healManaPoint.HealingManaPointItemsFactory;
+import org.springframework.stereotype.Component;
 
-public class MiddleFlower implements HealingManaPointItems{
+@Component
+public class BigManaPointBottle implements HealingManaPointItems {
 
     private final int price;
 
-    private MiddleFlower(){
-        this.price = 150;
+    private BigManaPointBottle(){
+        this.price = 200;
     }
 
     @Override
@@ -20,22 +22,17 @@ public class MiddleFlower implements HealingManaPointItems{
 
     @Override
     public HealingItemsList getHealingItemClass() {
-        return HealingItemsList.MiddleFlower;
+        return HealingItemsList.SmallFlower;
     }
 
     @Override
-    public void use(Character character) {
-        character.setManaPoint(character.getManaPoint() + character.getMaxManaPoint()/2);
+    public void use(PlayerCharacter character) {
+        character.setManaPoints(character.getMaxManaPoints());
     }
 
-    public static HealingManaPointItemsFactory healingManaPointItemsFactory = MiddleFlower::new;
-
-    @Override
-    public void finalize() throws Throwable {
-        super.finalize();
-    }
+    public static HealingManaPointItemsFactory healingHitPointItemsFactory = BigManaPointBottle::new;
 
     public String toString(){
-        return MiddleFlower.class.getSimpleName();
+        return BigManaPointBottle.class.getSimpleName();
     }
 }

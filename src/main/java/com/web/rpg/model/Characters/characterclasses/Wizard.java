@@ -1,6 +1,6 @@
 package com.web.rpg.model.Characters.characterclasses;
 
-import com.web.rpg.model.Characters.Character;
+import com.web.rpg.model.Characters.PlayerCharacter;
 import com.web.rpg.model.Characters.CharacterFactory;
 import com.web.rpg.model.Characters.CharacterNames;
 import com.web.rpg.model.Items.Equipment;
@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * Created by pikachu on 13.07.17.
  */
-public class Wizard extends Character implements Equipment, UsingItems {
+public class Wizard extends PlayerCharacter implements Equipment, UsingItems {
 
     private Wizard(){
 
@@ -202,15 +202,15 @@ public class Wizard extends Character implements Equipment, UsingItems {
         return countOfSmallHitPointBottle;
     }
 
-    public int getCountOfBigFlower() {
+    public int getCountOfBigManaPointBottles() {
         return countOfBigFlower;
     }
 
-    public int getCountOfMiddleFlower() {
+    public int getCountOfMiddleManaPointBottles() {
         return countOfMiddleFlower;
     }
 
-    public int getCountOfSmallFlower() {
+    public int getCountOfSmallManaPointBottles() {
         return countOfSmallFlower;
     }
 
@@ -219,9 +219,9 @@ public class Wizard extends Character implements Equipment, UsingItems {
         return getCountOfBigHitPointBottle() +
                 getCountOfMiddleHitPointBottle() +
                 getCountOfSmallHitPointBottle() +
-                getCountOfBigFlower() +
-                getCountOfMiddleFlower() +
-                getCountOfSmallFlower();
+                getCountOfBigManaPointBottles() +
+                getCountOfMiddleManaPointBottles() +
+                getCountOfSmallManaPointBottles();
     }
     @Override
     public boolean checkHitPointBottle(){
@@ -230,7 +230,7 @@ public class Wizard extends Character implements Equipment, UsingItems {
 
     @Override
     public boolean checkManaPointBottle(){
-        return getCountOfSmallFlower() != 0 || getCountOfMiddleFlower() != 0 || getCountOfBigFlower() != 0;
+        return getCountOfSmallManaPointBottles() != 0 || getCountOfMiddleManaPointBottles() != 0 || getCountOfBigManaPointBottles() != 0;
 
     }
 

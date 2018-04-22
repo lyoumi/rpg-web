@@ -1,6 +1,6 @@
 package com.web.rpg.model.Characters.characterclasses;
 
-import com.web.rpg.model.Characters.Character;
+import com.web.rpg.model.Characters.PlayerCharacter;
 import com.web.rpg.model.Characters.CharacterFactory;
 import com.web.rpg.model.Characters.CharacterNames;
 import com.web.rpg.model.Items.Equipment;
@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * Created by pikachu on 13.07.17.
  */
-public class Archer extends Character implements UsingItems, Equipment{
+public class Archer extends PlayerCharacter implements UsingItems, Equipment{
 
 
     private Archer(){
@@ -28,10 +28,6 @@ public class Archer extends Character implements UsingItems, Equipment{
         agility = 22;
         intelligence = 13;
         power = 11;
-
-        multiplierAgility = 2;
-        multiplierIntelligence = 11;
-        multiplierPower = 7;
 
         updateStats();
 
@@ -194,15 +190,15 @@ public class Archer extends Character implements UsingItems, Equipment{
         return countOfSmallHitPointBottle;
     }
 
-    public int getCountOfBigFlower() {
+    public int getCountOfBigManaPointBottles() {
         return countOfBigFlower;
     }
 
-    public int getCountOfMiddleFlower() {
+    public int getCountOfMiddleManaPointBottles() {
         return countOfMiddleFlower;
     }
 
-    public int getCountOfSmallFlower() {
+    public int getCountOfSmallManaPointBottles() {
         return countOfSmallFlower;
     }
 
@@ -221,9 +217,9 @@ public class Archer extends Character implements UsingItems, Equipment{
         return getCountOfBigHitPointBottle() +
                 getCountOfMiddleHitPointBottle() +
                 getCountOfSmallHitPointBottle() +
-                getCountOfBigFlower() +
-                getCountOfMiddleFlower() +
-                getCountOfSmallFlower();
+                getCountOfBigManaPointBottles() +
+                getCountOfMiddleManaPointBottles() +
+                getCountOfSmallManaPointBottles();
     }
 
     @Override
@@ -233,7 +229,7 @@ public class Archer extends Character implements UsingItems, Equipment{
 
     @Override
     public boolean checkManaPointBottle(){
-        return getCountOfSmallFlower() > 0 || getCountOfMiddleFlower() > 0 || getCountOfBigFlower() > 0;
+        return getCountOfSmallManaPointBottles() > 0 || getCountOfMiddleManaPointBottles() > 0 || getCountOfBigManaPointBottles() > 0;
 
     }
 

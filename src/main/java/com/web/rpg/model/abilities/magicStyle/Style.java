@@ -1,6 +1,6 @@
 package com.web.rpg.model.abilities.magicStyle;
 
-import com.web.rpg.model.Characters.Character;
+import com.web.rpg.model.Characters.PlayerCharacter;
 import com.web.rpg.model.Characters.characterclasses.Archer;
 import com.web.rpg.model.Characters.characterclasses.Berserk;
 import com.web.rpg.model.abilities.Magic;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * Класс, дающий персонажу соответствующий его классу набор магий.
  */
 public class Style {
-    public static ArrayList<Magic> getMagicStyle(Character character){
+    public static ArrayList<Magic> getMagicStyle(PlayerCharacter character){
         ArrayList<Magic> listOfMagic = new ArrayList<>();
         if (character instanceof Archer){
             listOfMagic.add(FireBall.magicFactory.getMagicFactory(character.getLevel()));

@@ -1,38 +1,14 @@
 package com.web.rpg.model.Items.itemsclasses;
 
-import com.web.rpg.model.Items.EquipmentItems;
-import com.web.rpg.model.abilities.Magic;
-
 /**
  * Created by pikachu on 17.07.17.
  */
 
+import com.web.rpg.model.Items.EquipmentItems;
+
 /**
- * Базовый интерфейс для создания предметов.
+ * Basic interface for items
  */
 public interface Item {
-
-    /**
-     * Метод, который возвращает слот для экипировки текущего предмета.
-     *
-     * @return
-     *          slot position of current item.
-     */
-    EquipmentItems EQUIPMENT_ITEMS();
-
-    /**
-     * Метод, который возвращает бафф текущего предмета.
-     *
-     * @return
-     *          implementation of {@link game.model.abilities.buffs.BuffMagic}
-     */
-    Magic getBuff();
-
-    /**
-     * Метод, который возвращает стоимость предмета.
-     *
-     * @return
-     *          price of current item.
-     */
-    int getPrice();
+    EquipmentItems getEquipment();
 }

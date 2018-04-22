@@ -1,6 +1,6 @@
 package com.web.rpg.model.Quests.questsclasses;
 
-import com.web.rpg.model.Characters.Character;
+import com.web.rpg.model.Characters.PlayerCharacter;
 import com.web.rpg.model.Items.itemsclasses.Item;
 import com.web.rpg.model.Quests.Quest;
 import com.web.rpg.model.Quests.QuestFactory;
@@ -12,7 +12,7 @@ public class TradersQuest implements Quest {
 
     private int last;
 
-    private TradersQuest(Character character){
+    private TradersQuest(PlayerCharacter character){
         task = character.getLevel() * 10;
         last = task;
         if (character.getLevel() < 8) experience = character.getLevel()*100;

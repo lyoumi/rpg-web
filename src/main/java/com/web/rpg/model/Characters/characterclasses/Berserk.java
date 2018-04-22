@@ -1,6 +1,6 @@
 package com.web.rpg.model.Characters.characterclasses;
 
-import com.web.rpg.model.Characters.Character;
+import com.web.rpg.model.Characters.PlayerCharacter;
 import com.web.rpg.model.Characters.CharacterFactory;
 import com.web.rpg.model.Characters.CharacterNames;
 import com.web.rpg.model.Items.Equipment;
@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * Created by pikachu on 13.07.17.
  */
-public class Berserk extends Character implements UsingItems, Equipment {
+public class Berserk extends PlayerCharacter implements UsingItems, Equipment {
 
     private Berserk(){
 
@@ -108,17 +108,17 @@ public class Berserk extends Character implements UsingItems, Equipment {
     }
 
     @Override
-    public int getCountOfBigFlower() {
+    public int getCountOfBigManaPointBottles() {
         return countOfBigFlower;
     }
 
     @Override
-    public int getCountOfMiddleFlower() {
+    public int getCountOfMiddleManaPointBottles() {
         return countOfMiddleFlower;
     }
 
     @Override
-    public int getCountOfSmallFlower() {
+    public int getCountOfSmallManaPointBottles() {
         return countOfSmallFlower;
     }
 
@@ -127,9 +127,9 @@ public class Berserk extends Character implements UsingItems, Equipment {
         return getCountOfBigHitPointBottle() +
                 getCountOfMiddleHitPointBottle() +
                 getCountOfSmallHitPointBottle() +
-                getCountOfBigFlower() +
-                getCountOfMiddleFlower() +
-                getCountOfSmallFlower();
+                getCountOfBigManaPointBottles() +
+                getCountOfMiddleManaPointBottles() +
+                getCountOfSmallManaPointBottles();
     }
 
     @Override
@@ -241,7 +241,7 @@ public class Berserk extends Character implements UsingItems, Equipment {
 
     @Override
     public boolean checkManaPointBottle(){
-        return getCountOfSmallFlower() != 0 || getCountOfMiddleFlower() != 0 || getCountOfBigFlower() != 0;
+        return getCountOfSmallManaPointBottles() != 0 || getCountOfMiddleManaPointBottles() != 0 || getCountOfBigManaPointBottles() != 0;
 
     }
 

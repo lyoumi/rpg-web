@@ -1,6 +1,6 @@
 package com.web.rpg.model.Items.itemsclasses;
 
-import com.web.rpg.model.Characters.Character;
+import com.web.rpg.model.Characters.PlayerCharacter;
 import com.web.rpg.model.Items.itemsclasses.healclasses.HealingItemsList;
 
 public interface HealingItems {
@@ -25,9 +25,7 @@ public interface HealingItems {
      * Метод, реализующий использование  текущего предмета.
      *
      * @param character
-     *              character implementation of {@link Character}
+     *              character implementation of {@link PlayerCharacter}
      */
-    void use(Character character);
-
-    void finalize() throws Throwable ;
+    void use(PlayerCharacter character);
 }

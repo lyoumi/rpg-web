@@ -116,5 +116,11 @@ public enum MonsterNames {
     YellowGoblin,
     Zod,
     Zombie,
-    Zoom
+    Zoom;
+
+
+    @Override
+    public String toString() {
+        return name();
+    }
 }

@@ -1,7 +1,7 @@
 package com.web.rpg.model.Items.itemsclasses;
 
-import com.web.rpg.model.Characters.Character;
+import com.web.rpg.model.Characters.PlayerCharacter;
 
 public interface ItemsFactory {
-    Item createNewItem(Character character);
+    Item createNewItem(PlayerCharacter character);
 }

@@ -1,7 +1,7 @@
 package com.web.rpg.model.Monsters;
 
-import com.web.rpg.model.Characters.Character;
+import com.web.rpg.model.Characters.PlayerCharacter;
 
 public interface MonsterFactory {
-    Monster createNewMonster(Character character);
+    Monster createNewMonster(PlayerCharacter character);
 }
