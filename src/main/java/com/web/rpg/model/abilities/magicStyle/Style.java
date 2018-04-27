@@ -1,8 +1,7 @@
 package com.web.rpg.model.abilities.magicStyle;
 
+import com.web.rpg.model.Characters.CharacterClass;
 import com.web.rpg.model.Characters.PlayerCharacter;
-import com.web.rpg.model.Characters.characterclasses.Archer;
-import com.web.rpg.model.Characters.characterclasses.Berserk;
 import com.web.rpg.model.abilities.Magic;
 import com.web.rpg.model.abilities.buffs.buffsclasses.DragonForm;
 import com.web.rpg.model.abilities.buffs.buffsclasses.ForceOfJedi;
@@ -18,14 +17,14 @@ import java.util.ArrayList;
  * Класс, дающий персонажу соответствующий его классу набор магий.
  */
 public class Style {
-    public static ArrayList<Magic> getMagicStyle(PlayerCharacter character){
+    public static ArrayList<Magic> getMagicStyle(PlayerCharacter character) {
         ArrayList<Magic> listOfMagic = new ArrayList<>();
-        if (character instanceof Archer){
+        if (CharacterClass.ARCHER.equals(character.getCharacterClass())) {
             listOfMagic.add(FireBall.magicFactory.getMagicFactory(character.getLevel()));
             listOfMagic.add(IceChains.magicFactory.getMagicFactory(character.getLevel()));
             listOfMagic.add(SmallHealing.magicFactory.getMagicFactory(character.getLevel()));
             return listOfMagic;
-        } else if (character instanceof Berserk){
+        } else if (CharacterClass.BERSERK.equals(character.getCharacterClass())) {
             listOfMagic.add(DragonBall.magicFactory.getMagicFactory(character.getLevel()));
             listOfMagic.add(DragonForm.magicFactory.getMagicFactory(character.getLevel()));
             listOfMagic.add(SmallHealing.magicFactory.getMagicFactory(character.getLevel()));

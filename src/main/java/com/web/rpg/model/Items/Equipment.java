@@ -32,5 +32,5 @@ public interface Equipment {
      * @return
      *          current equipmentclasses.
      */
-    Map<EquipmentItems, Item> showEquipment();
+    Map<EquipmentSlot, Item> showEquipment();
 }

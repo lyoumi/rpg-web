@@ -1,11 +1,13 @@
 package com.web.rpg.model.Monsters.service;
 
+import com.web.rpg.model.Characters.CharacterClass;
 import com.web.rpg.model.Characters.PlayerCharacter;
-import com.web.rpg.model.Characters.characterclasses.Berserk;
 import com.web.rpg.model.Monsters.Monster;
 import com.web.rpg.model.Monsters.MonsterNames;
 import com.web.rpg.model.Monsters.monstersclasses.Boss;
 import com.web.rpg.model.Monsters.monstersclasses.MediumBot;
+import com.web.rpg.repository.MonsterRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,6 +16,9 @@ import java.util.Random;
 
 public class MonsterServiceImpl implements MosterService {
 
+    @Autowired
+    private MonsterRepository monsterRepository;
+
     private static final Random RANDOM = new Random();
     private static final List<MonsterNames> MONSTER_NAMES = Collections.unmodifiableList(Arrays.asList(MonsterNames.values()));
 
@@ -21,7 +26,7 @@ public class MonsterServiceImpl implements MosterService {
     public Monster prepearMonsterForBattle(PlayerCharacter character){
         MediumBot monster = new MediumBot();
 
-        if (character instanceof Berserk) {
+        if (CharacterClass.BERSERK.equals(character.getCharacterClass())) {
             monster.setLevel(character.getLevel() + 4);
         } else {
             monster.setLevel(character.getLevel() + 1);
@@ -36,7 +41,7 @@ public class MonsterServiceImpl implements MosterService {
             monster.setDamage(monster.getLevel() * 20);
         }
         monster.setName(MONSTER_NAMES.get(RANDOM.nextInt(MONSTER_NAMES.size())).toString());
-
+        monsterRepository.save(monster);
         return monster;
     }
 
@@ -47,5 +52,15 @@ public class MonsterServiceImpl implements MosterService {
         } else {
             return ((Boss)monster).getHitPoint() > 0;
         }
+    }
+
+    @Override
+    public void remove(MediumBot monster) {
+        monsterRepository.delete(monster);
+    }
+
+    @Override
+    public Monster updateOrCreate(Monster monster) {
+        return monsterRepository.save(monster);
     }
 }

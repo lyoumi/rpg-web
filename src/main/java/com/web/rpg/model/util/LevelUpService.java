@@ -1,7 +1,7 @@
 package com.web.rpg.model.util;
 
+import com.web.rpg.model.Characters.CharacterClass;
 import com.web.rpg.model.Characters.PlayerCharacter;
-import com.web.rpg.model.Characters.characterclasses.CharacterClass;
 import com.web.rpg.model.util.stats.Stats;
 import com.web.rpg.repository.CharacterRepository;
 import org.springframework.beans.factory.annotation.Autowired;

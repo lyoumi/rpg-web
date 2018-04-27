@@ -1,16 +1,17 @@
 package com.web.rpg.model.Quests;
 
-import com.web.rpg.model.Items.itemsclasses.Item;
+import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-public interface Quest {
-    
-    int getReward();
-    
-    int getTask();
+import java.io.Serializable;
+import java.util.UUID;
 
-    int getLast();
-
-    Item getItemReward();
-
-    void finalize() throws Throwable;
+@Data
+@Document
+public class Quest implements Serializable {
+    @Id
+    private UUID id;
+    private Double exp;
+    private Integer gold;
 }

@@ -2,14 +2,15 @@ package com.web.rpg.model.Monsters.monstersclasses;
 
 import com.web.rpg.model.Monsters.Monster;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import java.io.Serializable;
 import java.util.UUID;
 
 @Data
-@Entity
-public class MediumBot implements Monster {
+@Document
+public class MediumBot implements Monster, Serializable {
     @Id
     private UUID id;
     private int level;
