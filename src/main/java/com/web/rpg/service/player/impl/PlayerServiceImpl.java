@@ -2,6 +2,7 @@ package com.web.rpg.service.player.impl;
 
 import com.web.rpg.model.Characters.PlayerCharacter;
 import com.web.rpg.repository.CharacterRepository;
+import com.web.rpg.service.character.CharacterService;
 import com.web.rpg.service.player.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,13 +12,15 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Autowired
     private CharacterRepository characterRepository;
+    @Autowired
+    private CharacterService characterService;
 
     @Override
     public Integer getCountOfManaBottles(UUID id) {
         if (id == null) {
             return null;
         }
-        PlayerCharacter character = characterRepository.findOne(id);
+        PlayerCharacter character = characterService.findById(id);
         return character.getCountOfBigManaPointBottles() +
                 character.getCountOfMiddleManaPointBottles() +
                 character.getCountOfSmallManaPointBottles();
@@ -28,7 +31,7 @@ public class PlayerServiceImpl implements PlayerService {
         if (id == null) {
             return null;
         }
-        PlayerCharacter character = characterRepository.findOne(id);
+        PlayerCharacter character = characterService.findById(id);
         return character.getCountOfBigHitPointBottle() +
                 character.getCountOfMiddleHitPointBottle() +
                 character.getCountOfSmallHitPointBottle();

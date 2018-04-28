@@ -3,16 +3,15 @@ package com.web.rpg.service.world;
 import com.web.rpg.model.Characters.CharacterClass;
 import com.web.rpg.model.Characters.PlayerCharacter;
 import com.web.rpg.model.Items.EquipmentSlot;
-import com.web.rpg.model.Items.itemsclasses.Item;
-import com.web.rpg.model.Items.itemsclasses.healclasses.healHitPoint.items.BigHPBottle;
-import com.web.rpg.model.Items.itemsclasses.healclasses.healHitPoint.items.MiddleHPBottle;
-import com.web.rpg.model.Items.itemsclasses.healclasses.healHitPoint.items.SmallHPBottle;
-import com.web.rpg.model.Items.itemsclasses.healclasses.healManaPoint.items.BigManaPointBottle;
-import com.web.rpg.model.Items.itemsclasses.healclasses.healManaPoint.items.MiddleManaPointBottle;
-import com.web.rpg.model.Items.itemsclasses.healclasses.healManaPoint.items.SmallManaPointBottle;
-import com.web.rpg.model.Monsters.Monster;
-import com.web.rpg.model.Monsters.monstersclasses.MediumBot;
-import com.web.rpg.model.Monsters.service.MosterService;
+import com.web.rpg.model.Items.impl.Item;
+import com.web.rpg.model.Items.impl.heal.healHitPoint.items.BigHPBottle;
+import com.web.rpg.model.Items.impl.heal.healHitPoint.items.MiddleHPBottle;
+import com.web.rpg.model.Items.impl.heal.healHitPoint.items.SmallHPBottle;
+import com.web.rpg.model.Items.impl.heal.healManaPoint.items.BigManaPointBottle;
+import com.web.rpg.model.Items.impl.heal.healManaPoint.items.MiddleManaPointBottle;
+import com.web.rpg.model.Items.impl.heal.healManaPoint.items.SmallManaPointBottle;
+import com.web.rpg.model.Monsters.monstersclasses.Monster;
+import com.web.rpg.model.Monsters.service.MonsterService;
 import com.web.rpg.repository.CharacterRepository;
 import com.web.rpg.service.character.CharacterService;
 import com.web.rpg.service.items.ItemService;
@@ -21,6 +20,7 @@ import com.web.rpg.service.world.util.ItemGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -31,17 +31,16 @@ import java.util.stream.IntStream;
 @Service
 public class WorldServiceImpl implements WorldService {
 
-    private CharacterRepository characterRepository;
-
-    private CharacterService characterService;
-    private BigHPBottle bigHPBottle;
-    private MiddleHPBottle middleHPBottle;
-    private SmallHPBottle smallHPBottle;
-    private BigManaPointBottle bigManaPointBottle;
-    private MiddleManaPointBottle middleManaPointBottle;
-    private SmallManaPointBottle smallManaPointBottle;
-    private MosterService monsterService;
-    private ItemService itemService;
+    private final CharacterService characterService;
+    private final BigHPBottle bigHPBottle;
+    private final MiddleHPBottle middleHPBottle;
+    private final SmallHPBottle smallHPBottle;
+    private final BigManaPointBottle bigManaPointBottle;
+    private final MiddleManaPointBottle middleManaPointBottle;
+    private final SmallManaPointBottle smallManaPointBottle;
+    private final MonsterService monsterService;
+    private final ItemService itemService;
+    private final ItemGenerator itemGenerator;
 
     @Autowired
     public WorldServiceImpl(CharacterRepository characterRepository,
@@ -52,9 +51,9 @@ public class WorldServiceImpl implements WorldService {
                             BigManaPointBottle bigManaPointBottle,
                             MiddleManaPointBottle middleManaPointBottle,
                             SmallManaPointBottle smallManaPointBottle,
-                            MosterService monsterService,
-                            ItemService itemService) {
-        this.characterRepository = characterRepository;
+                            MonsterService monsterService,
+                            ItemService itemService,
+                            ItemGenerator itemGenerator) {
         this.characterService = characterService;
         this.bigHPBottle = bigHPBottle;
         this.middleHPBottle = middleHPBottle;
@@ -64,6 +63,7 @@ public class WorldServiceImpl implements WorldService {
         this.smallManaPointBottle = smallManaPointBottle;
         this.monsterService = monsterService;
         this.itemService = itemService;
+        this.itemGenerator = itemGenerator;
     }
 
     private static final Random RANDOM = new Random();
@@ -77,7 +77,7 @@ public class WorldServiceImpl implements WorldService {
 
     @Override
     public void changeCharactersStatements() {
-        List<PlayerCharacter> characters = (List<PlayerCharacter>) characterRepository.findAll();
+        List<PlayerCharacter> characters = characterService.findAll();
         characters.parallelStream().forEach(this::action);
     }
 
@@ -111,7 +111,7 @@ public class WorldServiceImpl implements WorldService {
     private void sleep(PlayerCharacter character) {
         character.setHitPoints(character.getMaxHitPoints());
         character.setManaPoints(character.getMaxManaPoints());
-        characterRepository.save(character);
+        characterService.save(character);
     }
 
     private void fight(PlayerCharacter character) {
@@ -119,13 +119,13 @@ public class WorldServiceImpl implements WorldService {
         character.setMonster(monster);
         monsterService.updateOrCreate(monster);
         character.setCountToEndOfAction(1);
-        characterRepository.save(character);
+        characterService.save(character);
     }
 
     private void processEvent(PlayerCharacter character) {
         character.setCurrentAction(EVENT_DETAILS.get(RANDOM.nextInt(EVENT_DETAILS.size())).toString());
         findRandomGoods(character);
-        characterRepository.save(character);
+        characterService.save(character);
     }
 
     private void processFight(PlayerCharacter character) {
@@ -151,27 +151,36 @@ public class WorldServiceImpl implements WorldService {
             }
         }
 
-        MediumBot monster = (MediumBot) character.getMonster();
+        Monster monster = (Monster) character.getMonster();
         monster.setHitPoint((monster.getHitPoint() - (character.getBaseDamage())));
         character.setHitPoints((character.getHitPoints() + character.getDefence() - monster.getDamage()));
-        if (monsterService.isDead(monster)) {
+        if (monster.getHitPoint() <= 0) {
             character.setCountToEndOfAction(0);
             IntStream.range(0, 100).mapToObj(i -> character).forEach(this::findRandomGoods);
-            autoEquip(character, ItemGenerator.generateItem(character));
+            autoEquip(character, itemGenerator.generateItem(character));
             character.setMonster(null);
             monsterService.remove(monster);
+        } else {
+            monsterService.updateOrCreate(monster);
         }
-        characterRepository.save(character);
+        characterService.save(character);
     }
 
     private void autoEquip(PlayerCharacter character, Item newItem) {
         Map<EquipmentSlot, Item> equipment = character.getItems()
                 .stream().collect(Collectors.toMap(Item::getSlot, item -> item, (a, b) -> b));
-        if (newItem.getActivePoints() > equipment.get(newItem.getSlot()).getActivePoints()) {
-            itemService.removeItem(equipment.get(newItem.getSlot()));
-            itemService.updateOrCreate(newItem);
+        if (equipment.isEmpty() || !equipment.containsKey(newItem.getSlot())) {
             equipment.put(newItem.getSlot(), newItem);
-            characterRepository.save(character);
+            character.setItems(new ArrayList<>(equipment.values()));
+            characterService.save(character);
+        } else {
+            if (newItem.getActivePoints() > equipment.get(newItem.getSlot()).getActivePoints()) {
+                itemService.removeItem(equipment.get(newItem.getSlot()));
+                itemService.updateOrCreate(newItem);
+                equipment.put(newItem.getSlot(), newItem);
+                character.setItems((List<Item>) equipment.values());
+                characterService.save(character);
+            }
         }
     }
 

@@ -3,15 +3,17 @@ package com.web.rpg.model.util;
 import com.web.rpg.model.Characters.CharacterClass;
 import com.web.rpg.model.Characters.PlayerCharacter;
 import com.web.rpg.model.util.stats.Stats;
-import com.web.rpg.repository.CharacterRepository;
+import com.web.rpg.service.character.CharacterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 @Component
 public class LevelUpService {
 
     @Autowired
-    private CharacterRepository characterRepository;
+    private CharacterService characterService;
 
     @Autowired
     private ArcherServiceUtil archerServiceUtil;
@@ -20,8 +22,8 @@ public class LevelUpService {
     @Autowired
     private WizardServiceUtil wizardServiceUtil;
 
-    public void levelUp(String stat, String playerId) {
-        PlayerCharacter character = characterRepository.getCharacterByPlayerId(playerId);
+    public void levelUp(String stat, UUID playerId) {
+        PlayerCharacter character = characterService.findByPlayerId(playerId);
 
         switch (stat) {
             case Stats.AGILITY: {
@@ -58,7 +60,7 @@ public class LevelUpService {
             }
 
         }
-        characterRepository.save(character);
+        characterService.save(character);
     }
 
     private PlayerCharacter updateStats(PlayerCharacter character, double characterPowerMultiplier, double characterIntelligenceMultiplier, double characterAgilityMultiplier) {

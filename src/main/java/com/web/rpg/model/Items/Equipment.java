@@ -1,6 +1,6 @@
 package com.web.rpg.model.Items;
 
-import com.web.rpg.model.Items.itemsclasses.Item;
+import com.web.rpg.model.Items.impl.Item;
 
 import java.util.Map;
 

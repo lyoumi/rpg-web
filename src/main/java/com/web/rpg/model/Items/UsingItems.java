@@ -1,6 +1,6 @@
 package com.web.rpg.model.Items;
 
-import com.web.rpg.model.Items.itemsclasses.HealingItems;
+import com.web.rpg.model.Items.impl.HealingItems;
 
 import java.util.List;
 

@@ -16,7 +16,7 @@ public class ForceOfJedi implements BuffMagic{
     private int power = 5;
     private int intelligence = 7;
 
-    private ForceOfJedi(int level) {
+    public ForceOfJedi(int level) {
         this.level = level;
         this.manaCost = getLevel()*7;
     }

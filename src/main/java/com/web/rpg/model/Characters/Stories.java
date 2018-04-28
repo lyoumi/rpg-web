@@ -1,12 +1,13 @@
 package com.web.rpg.model.Characters;
 
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
 
-@Entity
+
 @Data
+@Document
 public class Stories {
     @Id
     String id;

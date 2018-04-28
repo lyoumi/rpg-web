@@ -1,12 +1,11 @@
 package com.web.rpg.model.Monsters.monstersclasses;
 
-import com.web.rpg.model.Monsters.Monster;
 import lombok.Data;
 
 import java.util.UUID;
 
 @Data
-public class Boss implements Monster {
+public class Boss {
 
 //    @Id
     private UUID id;

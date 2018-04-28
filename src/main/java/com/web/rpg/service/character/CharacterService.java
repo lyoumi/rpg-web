@@ -1,12 +1,11 @@
 package com.web.rpg.service.character;
 
 import com.web.rpg.model.Characters.PlayerCharacter;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
-@Service
+
 public interface CharacterService {
 
     void processCharacters();
@@ -18,4 +17,12 @@ public interface CharacterService {
     PlayerCharacter createOrUpdateCharacter(PlayerCharacter character);
 
     List<PlayerCharacter> findAll();
+
+    PlayerCharacter save(PlayerCharacter character);
+
+    PlayerCharacter findById(UUID id);
+
+    PlayerCharacter findByPlayerId(UUID id);
+
+    void deleteAll();
 }

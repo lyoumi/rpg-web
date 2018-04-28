@@ -1,6 +1,5 @@
 package com.web.rpg.model.Monsters.monstersclasses;
 
-import com.web.rpg.model.Monsters.Monster;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,9 +9,9 @@ import java.util.UUID;
 
 @Data
 @Document
-public class MediumBot implements Monster, Serializable {
+public class Monster implements Serializable {
     @Id
-    private UUID id;
+    private UUID monsterId;
     private int level;
     private int damage;
     private double hitPoint;

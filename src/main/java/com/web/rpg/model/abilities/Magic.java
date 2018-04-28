@@ -4,10 +4,12 @@ package com.web.rpg.model.abilities;
  * Created by pikachu on 18.07.17.
  */
 
+import java.io.Serializable;
+
 /**
  * Базовый интерфейс для магий.
  */
-public interface Magic {
+public interface Magic extends Serializable {
 
     /**
      *

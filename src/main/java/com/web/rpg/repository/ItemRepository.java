@@ -1,6 +1,6 @@
 package com.web.rpg.repository;
 
-import com.web.rpg.model.Items.itemsclasses.Item;
+import com.web.rpg.model.Items.impl.Item;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.UUID;

@@ -19,7 +19,7 @@ public class ArchersBuff implements BuffMagic {
     private final int power = 5;
     private final int intelligence = 4;
 
-    private ArchersBuff(int level){
+    public ArchersBuff(int level){
         this.level = level;
     }
 

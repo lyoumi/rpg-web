@@ -1,12 +1,14 @@
 package com.web.rpg.service.items.impl;
 
-import com.web.rpg.model.Items.itemsclasses.Item;
+import com.web.rpg.model.Items.impl.Item;
 import com.web.rpg.repository.ItemRepository;
 import com.web.rpg.service.items.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+@Service
 public class ItemServiceImpl implements ItemService {
 
     @Autowired
