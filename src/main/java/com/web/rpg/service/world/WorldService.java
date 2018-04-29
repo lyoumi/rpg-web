@@ -1,4 +1,4 @@
-package com.web.rpg.service.world.interfaces;
+package com.web.rpg.service.world;
 
 import org.springframework.stereotype.Component;
 

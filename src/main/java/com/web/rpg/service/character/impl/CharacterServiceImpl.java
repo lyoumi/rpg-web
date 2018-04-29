@@ -1,7 +1,5 @@
 package com.web.rpg.service.character.impl;
 
-import com.web.rpg.converters.PlayerCharacterConverter;
-import com.web.rpg.entity.PlayerCharacterEntity;
 import com.web.rpg.model.Characters.PlayerCharacter;
 import com.web.rpg.model.Items.EquipmentSlot;
 import com.web.rpg.model.Items.impl.Item;
@@ -15,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class CharacterServiceImpl implements CharacterService {
@@ -23,8 +20,6 @@ public class CharacterServiceImpl implements CharacterService {
     @Autowired
     @Qualifier(value = "characterRepository")
     private CharacterRepository characterRepository;
-    @Autowired
-    private PlayerCharacterConverter converter;
 
     @Override
     public void processCharacters() {
@@ -36,7 +31,7 @@ public class CharacterServiceImpl implements CharacterService {
         if (id == null) {
             return null;
         }
-        PlayerCharacter character = converter.convertFromEntity(characterRepository.findOne(id));
+        PlayerCharacter character = characterRepository.findOne(id);
         return character.getCountOfBigManaPointBottles() +
                 character.getCountOfMiddleManaPointBottles() +
                 character.getCountOfSmallManaPointBottles();
@@ -47,7 +42,7 @@ public class CharacterServiceImpl implements CharacterService {
         if (id == null) {
             return null;
         }
-        PlayerCharacter character = converter.convertFromEntity(characterRepository.findOne(id));
+        PlayerCharacter character = characterRepository.findOne(id);
         return character.getCountOfBigHitPointBottle() +
                 character.getCountOfMiddleHitPointBottle() +
                 character.getCountOfSmallHitPointBottle();
@@ -55,31 +50,27 @@ public class CharacterServiceImpl implements CharacterService {
 
     @Override
     public PlayerCharacter createOrUpdateCharacter(PlayerCharacter character) {
-        return converter.convertFromEntity(characterRepository.save(converter.convertToEntity(character)));
+        return characterRepository.save(character);
     }
 
     @Override
     public List<PlayerCharacter> findAll() {
-        List<PlayerCharacterEntity> allCharacters = (List<PlayerCharacterEntity>) characterRepository.findAll();
-        return allCharacters
-                .stream()
-                .map(characterEntity -> converter.convertFromEntity(characterEntity))
-                .collect(Collectors.toList());
+        return characterRepository.findAll();
     }
 
     @Override
     public PlayerCharacter save(PlayerCharacter character) {
-        return converter.convertFromEntity(characterRepository.save(converter.convertToEntity(character)));
+        return characterRepository.save(character);
     }
 
     @Override
     public PlayerCharacter findById(UUID id) {
-        return converter.convertFromEntity(characterRepository.findOne(id));
+        return characterRepository.findOne(id);
     }
 
     @Override
     public PlayerCharacter findByPlayerId(UUID id) {
-        return converter.convertFromEntity(characterRepository.getCharacterByPlayerId(id));
+        return characterRepository.getCharacterByPlayerId(id);
     }
 
     @Override

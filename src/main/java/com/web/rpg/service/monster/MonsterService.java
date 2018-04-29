@@ -1,7 +1,7 @@
-package com.web.rpg.model.Monsters.service;
+package com.web.rpg.service.monster;
 
 import com.web.rpg.model.Characters.PlayerCharacter;
-import com.web.rpg.model.Monsters.monstersclasses.Monster;
+import com.web.rpg.model.Monsters.Monster;
 
 public interface MonsterService {
 

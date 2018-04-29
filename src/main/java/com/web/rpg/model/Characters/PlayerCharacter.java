@@ -1,21 +1,32 @@
-package com.web.rpg.entity;
+package com.web.rpg.model.Characters;
 
+import com.web.rpg.model.Items.impl.Item;
+import com.web.rpg.model.Monsters.Monster;
+import com.web.rpg.model.Quests.Quest;
+import com.web.rpg.model.abilities.Magic;
+import com.web.rpg.model.abilities.buffs.BuffMagic;
+import com.web.rpg.model.cities.City;
+import com.web.rpg.service.world.Event;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
+/**
+ * Created by pikachu on 13.07.17.
+ */
+
+/**
+ * Basic character model class
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document
-public class PlayerCharacterEntity implements Serializable {
+public class PlayerCharacter implements Serializable{
 
-    @Id
     private UUID id;
     private UUID playerId;
 
@@ -38,15 +49,15 @@ public class PlayerCharacterEntity implements Serializable {
     private Double baseDamage;
     private Integer defence;
 
-    private byte[] items;
-    private byte[] magic;
+    List<Item> items;
+    private Magic magic;
     private Integer magicPoint;
 
     private Integer expToNextLevel;
     private Integer gold;
-    private byte[] buffMagic;
-
+    private BuffMagic buffMagic;
     private Integer additionPower;
+
     private Integer additionIntelligence;
     private Integer additionAgility;
 
@@ -58,13 +69,14 @@ public class PlayerCharacterEntity implements Serializable {
     private Integer countOfMiddleManaPointBottles;
     private Integer countOfSmallManaPointBottles;
 
-    private byte[] quest;
+    private Quest quest;
 
     private String currentAction;
-    private String actionType;
+    private Event actionType;
     private Integer countToEndOfAction;
 
-    private byte[] monster;
-    private byte[] stories;
-    private byte[] city;
+    private Monster monster;
+    private Stories stories;
+
+    private City city;
 }

@@ -1,14 +1,16 @@
-package com.web.rpg.model.Monsters.monstersclasses;
+package com.web.rpg.model.Monsters;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.util.UUID;
 
 @Data
-@Document
+@AllArgsConstructor
+@NoArgsConstructor
 public class Monster implements Serializable {
     @Id
     private UUID monsterId;

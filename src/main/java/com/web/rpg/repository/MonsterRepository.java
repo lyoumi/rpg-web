@@ -1,46 +1,34 @@
 package com.web.rpg.repository;
 
-import com.web.rpg.model.Monsters.monstersclasses.Monster;
+import com.web.rpg.converters.MonsterConverter;
+import com.web.rpg.dao.MonsterDao;
+import com.web.rpg.model.Monsters.Monster;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-@Repository
+@Component
 public class MonsterRepository {
 
+    private final MonsterDao monsterDao;
+    private final MonsterConverter converter;
+
     @Autowired
-    private MongoTemplate mongoTemplate;
-
-    public void save(Monster entity) {
-        mongoTemplate.save(entity);
+    public MonsterRepository(MonsterDao monsterDao, MonsterConverter converter) {
+        this.monsterDao = monsterDao;
+        this.converter = converter;
     }
 
-    public Monster findOne(UUID uuid) {
-        return mongoTemplate.findOne(
-                Query.query(Criteria.where("name").is("Jack")), Monster.class);
+    public void save(Monster monster) {
+        monsterDao.save(converter.convertToEntity(monster));
     }
 
-//    public boolean exists(UUID uuid) {
-//        return false;
-//    }
-
-    public Iterable<Monster> findAll() {
-        return mongoTemplate.findAll(Monster.class);
+    public Monster findOne(UUID monsterId) {
+        return converter.convertFromEntity(monsterDao.findOne(monsterId));
     }
 
-//    public Iterable<Monster> findAll(Iterable<UUID> uuids) {
-//        return null;
-//    }
-
-    public long count() {
-        return 0;
-    }
-
-    public void delete(Monster entity) {
-        mongoTemplate.remove(entity, "monster");
+    public void delete(Monster monster) {
+        monsterDao.delete(converter.convertToEntity(monster));
     }
 }

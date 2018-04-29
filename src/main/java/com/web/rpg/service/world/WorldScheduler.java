@@ -1,6 +1,5 @@
 package com.web.rpg.service.world;
 
-import com.web.rpg.service.world.interfaces.WorldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

@@ -1,16 +1,13 @@
-package com.web.rpg.model.Monsters.service;
+package com.web.rpg.service.monster.impl;
 
 import com.web.rpg.model.Characters.CharacterClass;
 import com.web.rpg.model.Characters.PlayerCharacter;
-import com.web.rpg.model.Monsters.MonsterNames;
-import com.web.rpg.model.Monsters.monstersclasses.Monster;
+import com.web.rpg.model.Monsters.Monster;
 import com.web.rpg.repository.MonsterRepository;
+import com.web.rpg.service.monster.MonsterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -21,7 +18,7 @@ public class MonsterServiceImpl implements MonsterService {
     private MonsterRepository monsterRepository;
 
     private static final Random RANDOM = new Random();
-    private static final List<MonsterNames> MONSTER_NAMES = Collections.unmodifiableList(Arrays.asList(MonsterNames.values()));
+//    private static final List<MonsterNames> MONSTER_NAMES = Collections.unmodifiableList(Arrays.asList(MonsterNames.values()));
 
     @Override
     public Monster prepearMonsterForBattle(PlayerCharacter character){
@@ -41,7 +38,7 @@ public class MonsterServiceImpl implements MonsterService {
             monster.setHitPoint(monster.getLevel() * 70);
             monster.setDamage(monster.getLevel() * 20);
         }
-        monster.setName(MONSTER_NAMES.get(RANDOM.nextInt(MONSTER_NAMES.size())).toString());
+        monster.setName("Harold");
         return monster;
     }
 

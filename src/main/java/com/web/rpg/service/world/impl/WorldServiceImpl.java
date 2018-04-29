@@ -1,4 +1,4 @@
-package com.web.rpg.service.world;
+package com.web.rpg.service.world.impl;
 
 import com.web.rpg.model.Characters.CharacterClass;
 import com.web.rpg.model.Characters.PlayerCharacter;
@@ -10,21 +10,26 @@ import com.web.rpg.model.Items.impl.heal.healHitPoint.items.SmallHPBottle;
 import com.web.rpg.model.Items.impl.heal.healManaPoint.items.BigManaPointBottle;
 import com.web.rpg.model.Items.impl.heal.healManaPoint.items.MiddleManaPointBottle;
 import com.web.rpg.model.Items.impl.heal.healManaPoint.items.SmallManaPointBottle;
-import com.web.rpg.model.Monsters.monstersclasses.Monster;
-import com.web.rpg.model.Monsters.service.MonsterService;
-import com.web.rpg.repository.CharacterRepository;
+import com.web.rpg.model.Monsters.Monster;
+import com.web.rpg.model.cities.City;
+import com.web.rpg.service.monster.MonsterService;
+import com.web.rpg.dao.CharacterDao;
 import com.web.rpg.service.character.CharacterService;
 import com.web.rpg.service.items.ItemService;
-import com.web.rpg.service.world.interfaces.WorldService;
+import com.web.rpg.service.world.Event;
+import com.web.rpg.service.world.EventDetails;
+import com.web.rpg.service.world.WorldService;
 import com.web.rpg.service.world.util.ItemGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -43,7 +48,7 @@ public class WorldServiceImpl implements WorldService {
     private final ItemGenerator itemGenerator;
 
     @Autowired
-    public WorldServiceImpl(CharacterRepository characterRepository,
+    public WorldServiceImpl(CharacterDao characterDao,
                             CharacterService characterService,
                             BigHPBottle bigHPBottle,
                             MiddleHPBottle middleHPBottle,
@@ -124,6 +129,7 @@ public class WorldServiceImpl implements WorldService {
 
     private void processEvent(PlayerCharacter character) {
         character.setCurrentAction(EVENT_DETAILS.get(RANDOM.nextInt(EVENT_DETAILS.size())).toString());
+        character.setCity(new City(UUID.randomUUID(), "Hell", new HashMap<>()));
         findRandomGoods(character);
         characterService.save(character);
     }
