@@ -1,5 +1,6 @@
 package com.web.rpg.service.world.impl;
 
+import com.web.rpg.dao.CharacterDao;
 import com.web.rpg.model.Characters.CharacterClass;
 import com.web.rpg.model.Characters.PlayerCharacter;
 import com.web.rpg.model.Items.EquipmentSlot;
@@ -12,10 +13,10 @@ import com.web.rpg.model.Items.impl.heal.healManaPoint.items.MiddleManaPointBott
 import com.web.rpg.model.Items.impl.heal.healManaPoint.items.SmallManaPointBottle;
 import com.web.rpg.model.Monsters.Monster;
 import com.web.rpg.model.cities.City;
-import com.web.rpg.service.monster.MonsterService;
-import com.web.rpg.dao.CharacterDao;
 import com.web.rpg.service.character.CharacterService;
+import com.web.rpg.service.cities.CityService;
 import com.web.rpg.service.items.ItemService;
+import com.web.rpg.service.monster.MonsterService;
 import com.web.rpg.service.world.Event;
 import com.web.rpg.service.world.EventDetails;
 import com.web.rpg.service.world.WorldService;
@@ -25,11 +26,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -46,6 +45,7 @@ public class WorldServiceImpl implements WorldService {
     private final MonsterService monsterService;
     private final ItemService itemService;
     private final ItemGenerator itemGenerator;
+    private final CityService cityService;
 
     @Autowired
     public WorldServiceImpl(CharacterDao characterDao,
@@ -58,7 +58,7 @@ public class WorldServiceImpl implements WorldService {
                             SmallManaPointBottle smallManaPointBottle,
                             MonsterService monsterService,
                             ItemService itemService,
-                            ItemGenerator itemGenerator) {
+                            ItemGenerator itemGenerator, CityService cityService) {
         this.characterService = characterService;
         this.bigHPBottle = bigHPBottle;
         this.middleHPBottle = middleHPBottle;
@@ -69,6 +69,7 @@ public class WorldServiceImpl implements WorldService {
         this.monsterService = monsterService;
         this.itemService = itemService;
         this.itemGenerator = itemGenerator;
+        this.cityService = cityService;
     }
 
     private static final Random RANDOM = new Random();
@@ -129,7 +130,24 @@ public class WorldServiceImpl implements WorldService {
 
     private void processEvent(PlayerCharacter character) {
         character.setCurrentAction(EVENT_DETAILS.get(RANDOM.nextInt(EVENT_DETAILS.size())).toString());
-        character.setCity(new City(UUID.randomUUID(), "Hell", new HashMap<>()));
+        if (character.getTargetCity() == null && character.getCurrentCity() != null) {
+            List<City> cities = (List<City>) character.getCurrentCity().getCitiesNear().keySet();
+            City targetCity = cities.get(RANDOM.nextInt(cities.size()));
+            character.setTargetCity(targetCity);
+            character.setStepsToCity(character.getCurrentCity().getCitiesNear().get(targetCity));
+            character.setCurrentCity(null);
+        } else if (character.getTargetCity() == null && character.getCurrentCity() == null) {
+            List<City> cities = cityService.findAll();
+            City targetCity = cities.get(RANDOM.nextInt(cities.size()));
+            character.setTargetCity(targetCity);
+            character.setStepsToCity(42);
+        } else {
+            character.setStepsToCity(character.getStepsToCity() - 1);
+            if (character.getStepsToCity() < 1) {
+                character.setCurrentCity(character.getTargetCity());
+                character.setTargetCity(null);
+            }
+        }
         findRandomGoods(character);
         characterService.save(character);
     }

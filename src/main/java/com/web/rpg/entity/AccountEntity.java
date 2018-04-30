@@ -9,12 +9,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.UUID;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Document
-public class CityEntity {
+public class AccountEntity {
+
     @Id
     private UUID id;
-    private String name;
-    private byte[] citiesNear;
+    private String login;
+    private byte[] password;
+    private byte[] userInfo;
 }

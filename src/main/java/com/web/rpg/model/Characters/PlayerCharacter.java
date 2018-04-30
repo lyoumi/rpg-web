@@ -78,5 +78,7 @@ public class PlayerCharacter implements Serializable{
     private Monster monster;
     private Stories stories;
 
-    private City city;
+    private City currentCity;
+    private City targetCity;
+    private Integer stepsToCity;
 }

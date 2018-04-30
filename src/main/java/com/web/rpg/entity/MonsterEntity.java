@@ -15,7 +15,7 @@ import java.util.UUID;
 public class MonsterEntity {
 
     @Id
-    private UUID monsterId;
+    private UUID id;
     private int level;
     private int damage;
     private double hitPoint;

@@ -10,14 +10,12 @@ import com.web.rpg.model.abilities.Magic;
 import com.web.rpg.model.abilities.buffs.BuffMagic;
 import com.web.rpg.model.cities.City;
 import com.web.rpg.service.world.Event;
-import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.stereotype.Component;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Component
-public class PlayerCharacterConverter {
+public class PlayerCharacterConverter extends BaseConverter {
 
     public PlayerCharacterEntity convertToEntity(PlayerCharacter character) {
         return new PlayerCharacterEntity(
@@ -57,7 +55,9 @@ public class PlayerCharacterConverter {
                 character.getCountToEndOfAction(),
                 serializeObjectToByteArray(character.getMonster()),
                 serializeObjectToByteArray(character.getStories()),
-                serializeObjectToByteArray(character.getCity())
+                serializeObjectToByteArray(character.getCurrentCity()),
+                serializeObjectToByteArray(character.getTargetCity()),
+                character.getStepsToCity()
         );
     }
 
@@ -99,21 +99,9 @@ public class PlayerCharacterConverter {
                 characterEntity.getCountToEndOfAction(),
                 (Monster)deserializeObjectFromByte(characterEntity.getMonster()),
                 (Stories)deserializeObjectFromByte(characterEntity.getStories()),
-                (City) deserializeObjectFromByte(characterEntity.getCity())
+                (City) deserializeObjectFromByte(characterEntity.getCurrentCity()),
+                (City) deserializeObjectFromByte(characterEntity.getTargetCity()),
+                characterEntity.getStepsToCity()
         );
-    }
-
-    private byte[] serializeObjectToByteArray(Object o) {
-        if (o != null) {
-            return SerializationUtils.serialize((Serializable) o);
-        }
-        return null;
-    }
-
-    private Object deserializeObjectFromByte(byte[] byteArray) {
-        if (byteArray != null) {
-            return SerializationUtils.deserialize(byteArray);
-        }
-        return null;
     }
 }

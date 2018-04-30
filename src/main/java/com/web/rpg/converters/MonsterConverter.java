@@ -26,7 +26,7 @@ public class MonsterConverter {
     public Monster convertFromEntity(MonsterEntity monster) {
         if (monster != null) {
             return new Monster(
-                    monster.getMonsterId(),
+                    monster.getId(),
                     monster.getLevel(),
                     monster.getDamage(),
                     monster.getHitPoint(),
