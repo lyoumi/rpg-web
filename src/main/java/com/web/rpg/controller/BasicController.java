@@ -10,7 +10,10 @@ import com.web.rpg.service.cities.CityService;
 import com.web.rpg.service.world.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -43,7 +46,7 @@ public class BasicController {
     @PostMapping(path = "create")
     public void create() {
         IntStream.range(0, 10)
-                .forEach(value -> generator());
+                .forEach(value -> generator(generateName()));
     }
 
     @GetMapping(path = "show")
@@ -55,6 +58,37 @@ public class BasicController {
     @PostMapping(path = "delete")
     public void delete() {
         characterService.deleteAll();
+    }
+
+//    @RequestMapping(path = "create/my")
+//    public void createMy(@ModelAttribute PlayerCharacter character) {
+//        characterService.save(character);
+//    }
+
+    @GetMapping(path = "main")
+    public String getMainPage() {
+        System.out.println("You are here");
+        return "index";
+    }
+
+    @GetMapping(path = "add")
+    public String add(Model model) {
+        model.addAttribute("character", new PlayerCharacter());
+        return "character-add";
+    }
+
+    @PostMapping(path = "add")
+    public String add(PlayerCharacter character,
+                      BindingResult bindingResult) {
+        PlayerCharacter playerCharacter = generator(character.getName());
+        return playerCharacter.getId().toString();
+    }
+
+    @GetMapping(path = "{id}")
+    public String showMyCharacter(Model model, @PathVariable("id") UUID id) {
+        PlayerCharacter character = characterService.findById(id);
+        model.addAttribute("character", character);
+        return "character-show";
     }
 
 
@@ -111,11 +145,11 @@ public class BasicController {
 //
 //    }
 
-    public void generator() {
+    public PlayerCharacter generator(String name) {
         PlayerCharacter character = new PlayerCharacter();
         character.setId(UUID.randomUUID());
         character.setPlayerId(UUID.randomUUID());
-        character.setName(generateName());
+        character.setName(name);
         character.setAgility(30000);
         character.setIntelligence(30000);
         character.setPower(30000);
@@ -149,7 +183,7 @@ public class BasicController {
         character.setCountToEndOfAction(0);
         character.setMonster(null);
         character.setStories(null);
-        characterService.save(character);
+        return characterService.save(character);
     }
 
     private String generateName() {

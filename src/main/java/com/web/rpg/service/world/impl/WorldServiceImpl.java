@@ -84,7 +84,9 @@ public class WorldServiceImpl implements WorldService {
     @Override
     public void changeCharactersStatements() {
         List<PlayerCharacter> characters = characterService.findAll();
-        characters.parallelStream().forEach(this::action);
+        if (characters != null && !characters.isEmpty()) {
+            characters.forEach(this::action);
+        }
     }
 
     private void action(PlayerCharacter character) {
@@ -131,7 +133,7 @@ public class WorldServiceImpl implements WorldService {
     private void processEvent(PlayerCharacter character) {
         character.setCurrentAction(EVENT_DETAILS.get(RANDOM.nextInt(EVENT_DETAILS.size())).toString());
         if (character.getTargetCity() == null && character.getCurrentCity() != null) {
-            List<City> cities = (List<City>) character.getCurrentCity().getCitiesNear().keySet();
+            List<City> cities = new ArrayList(character.getCurrentCity().getCitiesNear().keySet());
             City targetCity = cities.get(RANDOM.nextInt(cities.size()));
             character.setTargetCity(targetCity);
             character.setStepsToCity(character.getCurrentCity().getCitiesNear().get(targetCity));
