@@ -65,7 +65,7 @@ public class PlayerCharacterEntity implements Serializable {
     private Integer countToEndOfAction;
 
     private byte[] monster;
-    private byte[] stories;
+    private byte[] story;
     private byte[] currentCity;
     private byte[] targetCity;
     private Integer stepsToCity;

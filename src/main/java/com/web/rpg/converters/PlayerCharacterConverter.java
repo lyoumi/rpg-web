@@ -2,7 +2,7 @@ package com.web.rpg.converters;
 
 import com.web.rpg.entity.PlayerCharacterEntity;
 import com.web.rpg.model.Characters.PlayerCharacter;
-import com.web.rpg.model.Characters.Stories;
+import com.web.rpg.model.Characters.Story;
 import com.web.rpg.model.Items.impl.Item;
 import com.web.rpg.model.Monsters.Monster;
 import com.web.rpg.model.Quests.Quest;
@@ -54,7 +54,7 @@ public class PlayerCharacterConverter extends BaseConverter {
                 character.getActionType().name(),
                 character.getCountToEndOfAction(),
                 serializeObjectToByteArray(character.getMonster()),
-                serializeObjectToByteArray(character.getStories()),
+                serializeObjectToByteArray(character.getStory()),
                 serializeObjectToByteArray(character.getCurrentCity()),
                 serializeObjectToByteArray(character.getTargetCity()),
                 character.getStepsToCity()
@@ -98,7 +98,7 @@ public class PlayerCharacterConverter extends BaseConverter {
                 Event.valueOf(characterEntity.getActionType()),
                 characterEntity.getCountToEndOfAction(),
                 (Monster)deserializeObjectFromByte(characterEntity.getMonster()),
-                (Stories)deserializeObjectFromByte(characterEntity.getStories()),
+                (Story) deserializeObjectFromByte(characterEntity.getStory()),
                 (City) deserializeObjectFromByte(characterEntity.getCurrentCity()),
                 (City) deserializeObjectFromByte(characterEntity.getTargetCity()),
                 characterEntity.getStepsToCity()

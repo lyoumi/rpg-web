@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 public class WorldScheduler {
 
     @Autowired
-    private WorldService worldService;
+    private WorldSchedulerService worldSchedulerService;
 
     @Scheduled(fixedDelay = 5000)
     public void scheduleFixedDelayTask(){
-        worldService.changeWorldStatement();
+        worldSchedulerService.changeWorldStatement();
     }
 }

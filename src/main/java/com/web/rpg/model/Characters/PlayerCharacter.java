@@ -76,7 +76,7 @@ public class PlayerCharacter implements Serializable{
     private Integer countToEndOfAction;
 
     private Monster monster;
-    private Stories stories;
+    private Story story;
 
     private City currentCity;
     private City targetCity;
