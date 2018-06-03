@@ -11,4 +11,6 @@ public interface AccountManagerService {
     Account getAccountByLogin(String login);
 
     List<Account> findAllAccounts();
+
+    boolean createAccount(Account account);
 }

@@ -5,6 +5,7 @@ import com.web.rpg.model.Items.EquipmentSlot;
 import com.web.rpg.model.Items.impl.Item;
 import com.web.rpg.repository.CharacterRepository;
 import com.web.rpg.service.character.CharacterService;
+import com.web.rpg.service.shared.util.HealingCharacterUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -17,9 +18,15 @@ import java.util.UUID;
 @Service
 public class CharacterServiceImpl implements CharacterService {
 
+    private final CharacterRepository characterRepository;
+    private final HealingCharacterUtil healingCharacterUtil;
+
     @Autowired
-    @Qualifier(value = "characterRepository")
-    private CharacterRepository characterRepository;
+    public CharacterServiceImpl(@Qualifier(value = "characterRepository") CharacterRepository characterRepository,
+                                HealingCharacterUtil healingCharacterUtil) {
+        this.characterRepository = characterRepository;
+        this.healingCharacterUtil = healingCharacterUtil;
+    }
 
     @Override
     public void processCharacters() {
@@ -76,6 +83,22 @@ public class CharacterServiceImpl implements CharacterService {
     @Override
     public void deleteAll() {
         characterRepository.deleteAll();
+    }
+
+    @Override
+    public void healCharacterHitPoints(PlayerCharacter character) {
+        boolean isHealed = healingCharacterUtil.autoHealHitPoints(character);
+        if (isHealed) {
+            characterRepository.save(character);
+        }
+    }
+
+    @Override
+    public void healCharacterManaPoints(PlayerCharacter character) {
+        boolean isHealed = healingCharacterUtil.autoHealManaPoints(character);
+        if (isHealed) {
+            characterRepository.save(character);
+        }
     }
 
     private Map<EquipmentSlot, Item> getCharacterEquipment(UUID id) {

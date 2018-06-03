@@ -105,6 +105,16 @@ public class BasicController {
         return "character-show-story";
     }
 
+    @PostMapping(path = "{id}/healhp")
+    public void healCharacterHP(PlayerCharacter character, @PathVariable("id") UUID id) {
+        characterService.healCharacterHitPoints(character);
+    }
+
+    @PostMapping(path = "{id}/healMP")
+    public void healCharacterMP(PlayerCharacter character, @PathVariable("id") UUID id) {
+        characterService.healCharacterManaPoints(character);
+    }
+
 
 //    @PostMapping(path = "city")
     public void generateWorld() {

@@ -6,15 +6,10 @@ import com.web.rpg.model.Characters.CharacterClass;
 import com.web.rpg.model.Characters.PlayerCharacter;
 import com.web.rpg.model.Items.EquipmentSlot;
 import com.web.rpg.model.Items.impl.Item;
-import com.web.rpg.model.Items.impl.heal.healHitPoint.items.BigHPBottle;
-import com.web.rpg.model.Items.impl.heal.healHitPoint.items.MiddleHPBottle;
-import com.web.rpg.model.Items.impl.heal.healHitPoint.items.SmallHPBottle;
-import com.web.rpg.model.Items.impl.heal.healManaPoint.items.BigManaPointBottle;
-import com.web.rpg.model.Items.impl.heal.healManaPoint.items.MiddleManaPointBottle;
-import com.web.rpg.model.Items.impl.heal.healManaPoint.items.SmallManaPointBottle;
 import com.web.rpg.model.Monsters.Monster;
 import com.web.rpg.model.cities.City;
 import com.web.rpg.service.character.CharacterService;
+import com.web.rpg.service.shared.util.HealingCharacterUtil;
 import com.web.rpg.service.cities.CityService;
 import com.web.rpg.service.items.ItemService;
 import com.web.rpg.service.monster.MonsterService;
@@ -37,12 +32,7 @@ import java.util.stream.IntStream;
 public class WorldSchedulerSchedulerServiceImpl implements WorldSchedulerService {
 
     private final CharacterService characterService;
-    private final BigHPBottle bigHPBottle;
-    private final MiddleHPBottle middleHPBottle;
-    private final SmallHPBottle smallHPBottle;
-    private final BigManaPointBottle bigManaPointBottle;
-    private final MiddleManaPointBottle middleManaPointBottle;
-    private final SmallManaPointBottle smallManaPointBottle;
+    private final HealingCharacterUtil healingCharacterUtil;
     private final MonsterService monsterService;
     private final ItemService itemService;
     private final ItemGenerator itemGenerator;
@@ -52,24 +42,14 @@ public class WorldSchedulerSchedulerServiceImpl implements WorldSchedulerService
     @Autowired
     public WorldSchedulerSchedulerServiceImpl(CharacterDao characterDao,
                                               CharacterService characterService,
-                                              BigHPBottle bigHPBottle,
-                                              MiddleHPBottle middleHPBottle,
-                                              SmallHPBottle smallHPBottle,
-                                              BigManaPointBottle bigManaPointBottle,
-                                              MiddleManaPointBottle middleManaPointBottle,
-                                              SmallManaPointBottle smallManaPointBottle,
+                                              HealingCharacterUtil healingCharacterUtil,
                                               MonsterService monsterService,
                                               ItemService itemService,
                                               ItemGenerator itemGenerator,
                                               CityService cityService,
                                               EventProcessorService eventProcessorService) {
         this.characterService = characterService;
-        this.bigHPBottle = bigHPBottle;
-        this.middleHPBottle = middleHPBottle;
-        this.smallHPBottle = smallHPBottle;
-        this.bigManaPointBottle = bigManaPointBottle;
-        this.middleManaPointBottle = middleManaPointBottle;
-        this.smallManaPointBottle = smallManaPointBottle;
+        this.healingCharacterUtil = healingCharacterUtil;
         this.monsterService = monsterService;
         this.itemService = itemService;
         this.itemGenerator = itemGenerator;
@@ -188,7 +168,7 @@ public class WorldSchedulerSchedulerServiceImpl implements WorldSchedulerService
             if (character.getManaPoints() > 0)
                 character.setManaPoints(character.getManaPoints() - 50);
             else {
-                if (healManaPoints(character)) {
+                if (autoHealManaPoints(character)) {
                     character.setManaPoints(character.getManaPoints() - 50);
                 } else {
                     character.setCountToEndOfAction(0);
@@ -199,7 +179,7 @@ public class WorldSchedulerSchedulerServiceImpl implements WorldSchedulerService
         }
 
         if (character.getHitPoints() < character.getMaxHitPoints() / 2) {
-            if (!healHitPoints(character)) {
+            if (!autoHealHitPoints(character)) {
                 character.setCountToEndOfAction(0);
                 character.setMonster(null);
                 return;
@@ -258,35 +238,11 @@ public class WorldSchedulerSchedulerServiceImpl implements WorldSchedulerService
         }
     }
 
-    private boolean healHitPoints(PlayerCharacter character) {
-        if (character.getCountOfBigHitPointBottle() > 0){
-            bigHPBottle.use(character);
-            return true;
-        }
-        else if (character.getCountOfMiddleHitPointBottle() > 0) {
-            middleHPBottle.use(character);
-            return true;
-        }
-        else if (character.getCountOfSmallHitPointBottle() > 0) {
-            smallHPBottle.use(character);
-            return true;
-        }
-        else return false;
+    private boolean autoHealHitPoints(PlayerCharacter character) {
+        return healingCharacterUtil.autoHealHitPoints(character);
     }
 
-    private boolean healManaPoints(PlayerCharacter character) {
-        if (character.getCountOfBigManaPointBottles() > 0){
-            bigManaPointBottle.use(character);
-            return true;
-        }
-        else if (character.getCountOfMiddleManaPointBottles() > 0) {
-            middleManaPointBottle.use(character);
-            return true;
-        }
-        else if (character.getCountOfSmallManaPointBottles() > 0) {
-            smallManaPointBottle.use(character);
-            return true;
-        }
-        else return false;
+    private boolean autoHealManaPoints(PlayerCharacter character) {
+        return healingCharacterUtil.autoHealManaPoints(character);
     }
 }

@@ -33,4 +33,15 @@ public class AccountManagerImpl implements AccountManagerService {
     public List<Account> findAllAccounts() {
         return accountManagerRepository.findAll();
     }
+
+    @Override
+    public boolean createAccount(Account account) {
+        Account existingAccount = getAccountByLogin(account.getLogin());
+        if (existingAccount != null) {
+            return false;
+        } else {
+            accountManagerRepository.save(account);
+            return true;
+        }
+    }
 }

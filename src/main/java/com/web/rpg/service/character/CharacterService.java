@@ -25,4 +25,8 @@ public interface CharacterService {
     PlayerCharacter findByPlayerId(UUID id);
 
     void deleteAll();
+
+    void healCharacterHitPoints(PlayerCharacter character);
+
+    void healCharacterManaPoints(PlayerCharacter character);
 }

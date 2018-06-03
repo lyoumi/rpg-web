@@ -17,6 +17,7 @@ public class AccountEntity {
     @Id
     private UUID id;
     private String login;
+    private String role;
     private byte[] password;
     private byte[] userInfo;
 }

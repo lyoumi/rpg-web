@@ -7,7 +7,7 @@ import java.io.Serializable;
 public class BaseConverter {
     byte[] serializeObjectToByteArray(Object o) {
         if (o != null) {
-            return SerializationUtils.serialize((Serializable) o);
+                return SerializationUtils.serialize((Serializable) o);
         }
         return null;
     }
