@@ -1,7 +1,6 @@
 package com.web.rpg.model.abilities.instants.instantmagics.healing;
 
 import com.web.rpg.model.abilities.MagicClasses;
-import com.web.rpg.model.abilities.MagicFactory;
 import com.web.rpg.model.abilities.instants.InstantMagic;
 
 public class SmallHealing implements InstantMagic {
@@ -41,6 +40,4 @@ public class SmallHealing implements InstantMagic {
     public String toString(){
         return this.getClass().getSimpleName();
     }
-
-    public static MagicFactory magicFactory = SmallHealing::new;
 }

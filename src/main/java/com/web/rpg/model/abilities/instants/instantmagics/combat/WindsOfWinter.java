@@ -1,7 +1,6 @@
 package com.web.rpg.model.abilities.instants.instantmagics.combat;
 
 import com.web.rpg.model.abilities.MagicClasses;
-import com.web.rpg.model.abilities.MagicFactory;
 import com.web.rpg.model.abilities.instants.InstantMagic;
 
 public class WindsOfWinter implements InstantMagic{
@@ -43,6 +42,4 @@ public class WindsOfWinter implements InstantMagic{
     public String toString(){
         return this.getClass().getSimpleName();
     }
-
-    public static MagicFactory magicFactory = WindsOfWinter::new;
 }

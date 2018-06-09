@@ -1,59 +1,65 @@
 package com.web.rpg.controller;
 
 import com.google.common.collect.ImmutableMap;
-import com.web.rpg.model.Characters.CharacterClass;
 import com.web.rpg.model.Characters.PlayerCharacter;
-import com.web.rpg.model.Quests.Quest;
-import com.web.rpg.model.abilities.buffs.buffsclasses.ArchersBuff;
-import com.web.rpg.model.abilities.buffs.buffsclasses.ForceOfJedi;
+import com.web.rpg.model.abilities.MagicStrategyFactory;
 import com.web.rpg.model.cities.City;
+import com.web.rpg.service.accounts.AccountManagerService;
 import com.web.rpg.service.character.CharacterService;
 import com.web.rpg.service.cities.CityService;
-import com.web.rpg.service.world.Event;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.IOException;
-import java.util.ArrayList;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
-import java.util.Random;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Controller
-@RequestMapping(value = "game")
-public class BasicController {
-
-//    @PostConstruct
-//    public void init() {
-//        generateWorld();
-//    }
+@RequestMapping(value = EndpointInfo.GAME_URL)
+public class GameController {
 
     private final CharacterService characterService;
     private final CityService cityService;
+    private final AccountManagerService accountManagerService;
+    private final MagicStrategyFactory magicStrategyFactory;
 
     @Autowired
-    public BasicController(CharacterService characterService, CityService cityService) {
+    public GameController(CharacterService characterService,
+                          CityService cityService,
+                          AccountManagerService accountManagerService,
+                          MagicStrategyFactory magicStrategyFactory) {
         this.characterService = characterService;
         this.cityService = cityService;
+        this.accountManagerService = accountManagerService;
+        this.magicStrategyFactory = magicStrategyFactory;
     }
 
-    private static final Random RANDOM = new Random();
+    @GetMapping
+    public String redirectToCharacterPage(Principal principal){
+        UUID characterId = accountManagerService.getAccountByLogin(principal.getName()).getUserInfo().getCharacterId();
+        return "redirect:/game/" + characterId.toString();
+    }
+
+    @GetMapping(path = "story")
+    public String redirectToCharacterStoryPage(Principal principal) {
+        UUID characterId = accountManagerService.getAccountByLogin(principal.getName()).getUserInfo().getCharacterId();
+        return "redirect:/game/" + characterId.toString() + "/story";
+    }
 
     @PostMapping(path = "create")
     public void create() {
-        IntStream.range(0, 1000)
-                .forEach(value -> generator(generateName()));
+        IntStream.range(0, 10000)
+                .forEach(value -> characterService.prepeareCharacter());
     }
 
     @GetMapping(path = "show")
@@ -67,11 +73,6 @@ public class BasicController {
         characterService.deleteAll();
     }
 
-//    @RequestMapping(path = "create/my")
-//    public void createMy(@ModelAttribute PlayerCharacter character) {
-//        characterService.save(character);
-//    }
-
     @GetMapping(path = "main")
     public String getMainPage() {
         System.out.println("You are here");
@@ -84,18 +85,18 @@ public class BasicController {
         return "character-add";
     }
 
-    @PostMapping(path = "add")
-    public String add(PlayerCharacter character,
-                      BindingResult bindingResult) {
-        PlayerCharacter playerCharacter = generator(character.getName());
-        return playerCharacter.getId().toString();
-    }
-
     @GetMapping(path = "{id}")
     public String showMyCharacter(Model model, @PathVariable("id") UUID id) {
         PlayerCharacter character = characterService.findById(id);
         model.addAttribute("character", character);
         return "character-show";
+    }
+
+    @GetMapping(path = "{id}/get")
+    @ResponseBody
+    public ResponseEntity getCurrentCharacter(@PathVariable("id") UUID id) {
+        PlayerCharacter character = characterService.findById(id);
+        return new ResponseEntity(character, HttpStatus.OK);
     }
 
     @GetMapping(path = "{id}/story")
@@ -106,13 +107,28 @@ public class BasicController {
     }
 
     @PostMapping(path = "{id}/healhp")
-    public void healCharacterHP(PlayerCharacter character, @PathVariable("id") UUID id) {
-        characterService.healCharacterHitPoints(character);
+    @ResponseBody
+    public ResponseEntity healCharacterHP(@PathVariable("id") UUID id) {
+        characterService.healCharacterHitPoints(characterService.findById(id));
+        return new ResponseEntity(characterService.findById(id).getHitPoints().intValue(), HttpStatus.OK);
     }
 
-    @PostMapping(path = "{id}/healMP")
-    public void healCharacterMP(PlayerCharacter character, @PathVariable("id") UUID id) {
-        characterService.healCharacterManaPoints(character);
+    @PostMapping(path = "{id}/healmp")
+    public ResponseEntity healCharacterMP(@PathVariable("id") UUID id) {
+        characterService.healCharacterManaPoints(characterService.findById(id));
+        return new ResponseEntity(characterService.findById(id).getManaPoints().intValue(), HttpStatus.OK);
+    }
+
+    @PostMapping(path = "{id}/skill")
+    @ResponseBody
+    public ResponseEntity useSkill(@PathVariable("id") UUID id) {
+        PlayerCharacter playerCharacter = characterService.findById(id);
+        if (playerCharacter != null && playerCharacter.getMonster() != null && playerCharacter.getMagic() != null) {
+            magicStrategyFactory.useMagic(playerCharacter);
+            return new ResponseEntity(playerCharacter, HttpStatus.OK);
+        } else {
+            return new ResponseEntity(playerCharacter, HttpStatus.METHOD_NOT_ALLOWED);
+        }
     }
 
 
@@ -162,65 +178,5 @@ public class BasicController {
         cityService.save(unnamed);
         cityService.save(winterfell);
         cityService.save(yustrown);
-    }
-
-//    private Map<City, Integer> getMap() {
-//        Map<City, Integer> map = new HashMap<>();
-//
-//    }
-
-    public PlayerCharacter generator(String name) {
-        PlayerCharacter character = new PlayerCharacter();
-        character.setId(UUID.randomUUID());
-        character.setPlayerId(UUID.randomUUID());
-        character.setName(name);
-        character.setAgility(30000);
-        character.setIntelligence(30000);
-        character.setPower(30000);
-        character.setExperience(30000L);
-        character.setLevel(80);
-        character.setCharacterClass(CharacterClass.BERSERK);
-        character.setHitPoints(300000D);
-        character.setMaxHitPoints(3000000D);
-        character.setManaPoints(300000D);
-        character.setMaxManaPoints(3000000D);
-        character.setBaseDamage(300000D);
-        character.setDefence(30000);
-        character.setItems(new ArrayList<>());
-        character.setMagic(new ForceOfJedi(80));
-        character.setMagicPoint(0);
-        character.setExpToNextLevel(300000000);
-        character.setGold(200000);
-        character.setBuffMagic(new ArchersBuff(80));
-        character.setAdditionAgility(2000);
-        character.setAdditionIntelligence(20000);
-        character.setAdditionPower(2000);
-        character.setCountOfBigHitPointBottle(2000);
-        character.setCountOfMiddleHitPointBottle(2000);
-        character.setCountOfSmallHitPointBottle(2000);
-        character.setCountOfBigManaPointBottles(2000);
-        character.setCountOfMiddleManaPointBottles(2000);
-        character.setCountOfSmallManaPointBottles(2000);
-        character.setQuest(new Quest());
-        character.setCurrentAction(Event.STORY.name());
-        character.setActionType(Event.STORY);
-        character.setCountToEndOfAction(0);
-        character.setMonster(null);
-        character.setStory(null);
-        return characterService.save(character);
-    }
-
-    private String generateName() {
-        Properties prop = new Properties();
-        try {
-            prop.load(getClass().getClassLoader().getResourceAsStream("properties/character-names.properties"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        List<String> characterNames = prop.entrySet()
-                .stream()
-                .map(entry -> (String) entry.getValue())
-                .collect(Collectors.toList());
-        return characterNames.get(RANDOM.nextInt(characterNames.size()));
     }
 }

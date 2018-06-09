@@ -13,7 +13,7 @@ import java.util.UUID;
 public class Account implements Serializable {
 
     private UUID id;
-    private String login;
+    private String username;
     private String role;
     private String password;
     private UserInfo userInfo;

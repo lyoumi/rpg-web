@@ -14,7 +14,7 @@ public class AccountConverter extends BaseConverter {
         } else {
             return new AccountEntity(
                     account.getId(),
-                    account.getLogin(),
+                    account.getUsername(),
                     account.getRole(),
                     serializeObjectToByteArray(account.getPassword()),
                     serializeObjectToByteArray(account.getUserInfo())
@@ -28,7 +28,7 @@ public class AccountConverter extends BaseConverter {
         } else {
             return new Account(
                     accountEntity.getId(),
-                    accountEntity.getLogin(),
+                    accountEntity.getUsername(),
                     accountEntity.getRole(),
                     (String) deserializeObjectFromByte(accountEntity.getPassword()),
                     (UserInfo) deserializeObjectFromByte(accountEntity.getUserInfo())

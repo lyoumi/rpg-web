@@ -34,11 +34,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/login").defaultSuccessUrl("/game/cf7523cb-a5d3-4da6-b8f3-a4b9e2e10b17/story")
+                .loginPage("/login").defaultSuccessUrl("/menu")
                 .permitAll()
                 .and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login");
     }
+
+    
 
     @Bean
     public PasswordEncoder passwordEncoder() {

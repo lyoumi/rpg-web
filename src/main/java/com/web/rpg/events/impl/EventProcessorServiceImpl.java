@@ -36,6 +36,7 @@ public class EventProcessorServiceImpl implements EventProcessorService {
     public void changeEvent(PlayerCharacter character) {
         character.getStory().setStep(character.getStory().getStep() + 1);
         generateCurrentAction(character.getStory());
+        character.setCurrentAction(character.getStory().getCurrentAction());
     }
 
     private String getQuestTitle(String code) {

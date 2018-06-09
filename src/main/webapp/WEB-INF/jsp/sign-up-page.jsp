@@ -66,9 +66,9 @@
             <h2 class="form-signin-heading">Please sign in</h2>
             <form:input path="id" name="id" style="display: none;"/>
             <label for="username" class="sr-only">Login</label>
-            <form:input path="login" type="text" id="username" name="username" class="form-control"
+            <form:input path="username" type="text" id="username" name="username" class="form-control"
                         placeholder="Login"/>
-            <form:errors path="login"/>
+            <form:errors path="username"/>
             <label for="password" class="sr-only">Password</label>
             <form:input path="password" type="password" id="password" name="password" class="form-control"
                         placeholder="password"/>

@@ -8,8 +8,12 @@ import com.web.rpg.service.monster.MonsterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Properties;
 import java.util.Random;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class MonsterServiceImpl implements MonsterService {
@@ -18,7 +22,16 @@ public class MonsterServiceImpl implements MonsterService {
     private MonsterRepository monsterRepository;
 
     private static final Random RANDOM = new Random();
-//    private static final List<MonsterNames> MONSTER_NAMES = Collections.unmodifiableList(Arrays.asList(MonsterNames.values()));
+
+    @Override
+    public void applyDamage(Monster monster, double damage) {
+        double currentHitPoint = monster.getHitPoint() - damage;
+        if (currentHitPoint >= 0) {
+            monster.setHitPoint(currentHitPoint);
+        } else {
+            monster.setHitPoint(0);
+        }
+    }
 
     @Override
     public Monster prepearMonsterForBattle(PlayerCharacter character){
@@ -38,7 +51,7 @@ public class MonsterServiceImpl implements MonsterService {
             monster.setHitPoint(monster.getLevel() * 70);
             monster.setDamage(monster.getLevel() * 20);
         }
-        monster.setName("Harold");
+        monster.setName(generateName());
         return monster;
     }
 
@@ -51,5 +64,19 @@ public class MonsterServiceImpl implements MonsterService {
     public Monster updateOrCreate(Monster monster) {
         monsterRepository.save(monster);
         return monsterRepository.findOne(((Monster)monster).getMonsterId());
+    }
+
+    private String generateName() {
+        Properties prop = new Properties();
+        try {
+            prop.load(getClass().getClassLoader().getResourceAsStream("properties/monster-names.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        List<String> characterNames = prop.entrySet()
+                .stream()
+                .map(entry -> (String) entry.getValue())
+                .collect(Collectors.toList());
+        return characterNames.get(RANDOM.nextInt(characterNames.size()));
     }
 }

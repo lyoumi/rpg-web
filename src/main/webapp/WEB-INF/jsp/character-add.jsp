@@ -11,7 +11,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%--<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>--%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -52,7 +52,7 @@
         <%--<li role="presentation"><a href="/admin/menu">Admin menu</a></li>--%>
         <%--</sec:authorize>--%>
         <%--<sec:authorize access="isAnonymous()">--%>
-        <%--<li role="presentation"><a href="/login">Login</a></li>--%>
+        <%--<li role="presentation"><a href="/username">Login</a></li>--%>
         <%--</sec:authorize>--%>
         <%--</ul>--%>
         <%--</nav>--%>
@@ -63,7 +63,7 @@
             <form:form modelAttribute="character">
                 <fieldset>
 
-                        <%--<sec:csrfInput/>--%>
+                        <sec:csrfInput/>
 
                     <form:input path="name" placeholder="Character name" cssClass="form-control"/>
                     <br/>

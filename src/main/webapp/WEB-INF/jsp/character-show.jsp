@@ -11,8 +11,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%--<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>--%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <head>
+    <sec:csrfInput/>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -39,31 +40,30 @@
 
 <form action="<c:url value="{id}" />" method="POST">
 
-    <div class="container">
-        <%--<div class="header clearfix">--%>
-            <%--<nav>--%>
-                <%--<ul class="nav nav-pills pull-right">--%>
-                    <%--<li role="presentation" class="active"><a href="/character/show">Home</a></li>--%>
-                    <%--<sec:authorize access="isAuthenticated()">--%>
-                        <%--<li role="presentation"><a href="/profile">Profile</a></li>--%>
-                        <%--<li role="presentation"><a href="/logout">Logout</a></li>--%>
-                    <%--</sec:authorize>--%>
-                    <%--<sec:authorize access="hasRole('ADMIN')">--%>
-                        <%--<li role="presentation"><a href="/admin/menu">Admin menu</a></li>--%>
-                    <%--</sec:authorize>--%>
-                    <%--<sec:authorize access="isAnonymous()">--%>
-                        <%--<li role="presentation"><a href="/login">Login</a></li>--%>
-                    <%--</sec:authorize>--%>
-                <%--</ul>--%>
-            <%--</nav>--%>
-        <%--</div>--%>
-
+            <div class="header clearfix">
+                <nav>
+                    <ul class="nav nav-pills pull-right">
+                        <li role="presentation" class="active"><a href="/menu">Home</a></li>
+                        <sec:authorize access="isAuthenticated()">
+                            <li role="presentation"><a href="/profile">Profile</a></li>
+                            <li role="presentation"><a href="/logout">Logout</a></li>
+                        </sec:authorize>
+                        <sec:authorize access="hasRole('ADMIN')">
+                            <li role="presentation"><a href="/admin/menu">Admin menu</a></li>
+                        </sec:authorize>
+                        <sec:authorize access="isAnonymous()">
+                            <li role="presentation"><a href="/login">Login</a></li>
+                        </sec:authorize>
+                    </ul>
+                </nav>
+                <h3 class="text-muted">CROSS(X)WORLD</h3>
+            </div>
 
 
         <div class="jumbotron">
 
             <form:form modelAttribute="character">
-                <%--<sec:csrfInput/>--%>
+                <sec:csrfInput/>
                 <fieldset>
                     <h1>
                             ${character.name} ${character.level} lvl
@@ -80,15 +80,6 @@
                             <li>${item.slot}: ${item.name}</li>
                         </c:forEach>
                     </ul>
-                    </p>
-                    <%--<p>Genres:--%>
-                    <%--<ul>--%>
-                        <%--<c:forEach items="${book.genres}" var="genre">--%>
-                            <%--<li>${genre.genrename}</li>--%>
-                        <%--</c:forEach>--%>
-                    <%--</ul>--%>
-                    </p>
-                    </p>
                 </fieldset>
 
             </form:form>
@@ -96,7 +87,6 @@
 
 
     </div>
-
 
 </form>
 <script src="/resources/js/ie10-viewport-bug-workaround.js"></script>

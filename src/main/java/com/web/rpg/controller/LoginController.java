@@ -11,14 +11,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.validation.Valid;
+
 
 @Controller
 @Scope("session")
 public class LoginController {
 
+    private final AccountManagerService userService;
+
     @Autowired
-    private AccountManagerService accountManagerService;
+    public LoginController(AccountManagerService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping(path = "login")
     public String loadLogin(Model model) {
@@ -33,16 +37,14 @@ public class LoginController {
     }
 
     @PostMapping(path = "signup")
-    public String signUpHandling(@Valid Account account,
-                                 @RequestParam(name = "confirmationPassword") String confirmationPassword,
-                                 BindingResult bindingResult){
+    public String signUpHandling(Account user, @RequestParam(name = "confirmationPassword") String confirmationPassword, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
-            return "signup";
+            return "sign-up-page";
         }else {
-            if (account.getPassword().equals(confirmationPassword)){
-                account.setLogin(account.getLogin().replaceAll(" ", ""));
-                account.setPassword(account.getPassword().replaceAll(" ", ""));
-                if(accountManagerService.createAccount(account)) return "redirect:/login";
+            if (user.getPassword().equals(confirmationPassword)){
+                user.setUsername(user.getUsername().replaceAll(" ", ""));
+                user.setPassword(user.getPassword().replaceAll(" ", ""));
+                if(userService.createAccount(user)) return "redirect:/login";
             }
             return "redirect:/signup";
         }

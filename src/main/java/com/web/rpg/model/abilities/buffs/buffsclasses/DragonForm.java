@@ -1,7 +1,6 @@
 package com.web.rpg.model.abilities.buffs.buffsclasses;
 
 import com.web.rpg.model.abilities.MagicClasses;
-import com.web.rpg.model.abilities.MagicFactory;
 import com.web.rpg.model.abilities.buffs.BuffClasses;
 import com.web.rpg.model.abilities.buffs.BuffMagic;
 
@@ -63,6 +62,4 @@ public class DragonForm implements BuffMagic {
     public String toString(){
         return this.getClass().getSimpleName();
     }
-
-    public static MagicFactory magicFactory = DragonForm::new;
 }

@@ -13,4 +13,6 @@ public interface AccountManagerService {
     List<Account> findAllAccounts();
 
     boolean createAccount(Account account);
+
+    boolean verify(Account account);
 }

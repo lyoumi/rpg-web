@@ -1,7 +1,6 @@
 package com.web.rpg.model.abilities.instants.instantmagics.combat;
 
 import com.web.rpg.model.abilities.MagicClasses;
-import com.web.rpg.model.abilities.MagicFactory;
 import com.web.rpg.model.abilities.instants.InstantMagic;
 
 /**
@@ -12,7 +11,7 @@ public class FireBall implements InstantMagic {
     private int damage = 50;
     private int manaCost;
 
-    private FireBall(int level){
+    public FireBall(int level){
         this.level = level;
         this.manaCost = getLevel() * 10;
     }
@@ -47,6 +46,4 @@ public class FireBall implements InstantMagic {
     public String toString(){
         return this.getClass().getSimpleName();
     }
-
-    public static MagicFactory magicFactory = FireBall::new;
 }

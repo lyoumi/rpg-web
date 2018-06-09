@@ -14,6 +14,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <html lang="en">
 <head>
+    <sec:csrfInput/>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -57,7 +58,7 @@
             <h2 class="form-signin-heading">Please sign in</h2>
             <form:input path="id" style="display: none;"/>
             <label for="username" class="sr-only">Login</label>
-            <form:input path="login" type="text" id="username" name="username" class="form-control" placeholder="username"/>
+            <form:input path="username" type="text" id="username" name="username" class="form-control" placeholder="username"/>
             <label for="password" class="sr-only">Password</label>
             <form:input path="password"  type="password" id="password" name="password" class="form-control" placeholder="password"/>
             <label for="role" class="sr-only">Password</label>

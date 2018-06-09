@@ -1,7 +1,6 @@
 package com.web.rpg.model.abilities.debuffs.debuffsclasses.disable;
 
 import com.web.rpg.model.abilities.MagicClasses;
-import com.web.rpg.model.abilities.MagicFactory;
 import com.web.rpg.model.abilities.debuffs.DebuffMagic;
 
 public class Chains implements DebuffMagic{
@@ -50,6 +49,4 @@ public class Chains implements DebuffMagic{
     public String toString(){
         return this.getClass().getSimpleName();
     }
-
-    public static MagicFactory magicFactory = Chains::new;
 }

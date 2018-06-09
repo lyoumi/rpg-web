@@ -10,5 +10,6 @@ package com.web.rpg.model.abilities;
 public enum MagicClasses {
     COMBAT,
     HEALING,
-    BUFF
+    BUFF,
+    DEBUFF;
 }

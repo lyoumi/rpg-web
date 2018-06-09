@@ -28,5 +28,7 @@ public interface CharacterService {
 
     void healCharacterHitPoints(PlayerCharacter character);
 
+    UUID prepeareCharacter();
+
     void healCharacterManaPoints(PlayerCharacter character);
 }

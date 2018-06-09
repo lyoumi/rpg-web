@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,16 +17,19 @@ import java.util.Set;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    @Autowired
-    private AccountManagerRepository accountManagerRepository;
+    private final AccountManagerRepository accountManagerRepository;
 
-    @Transactional(readOnly = true)
+    @Autowired
+    public UserDetailsServiceImpl(AccountManagerRepository accountManagerRepository) {
+        this.accountManagerRepository = accountManagerRepository;
+    }
+
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        Account user = accountManagerRepository.findByLogin(login);
+        Account user = accountManagerRepository.findByUsername(login);
 
         Set<GrantedAuthority> grantedAuthorities = new HashSet();
         grantedAuthorities.add(new SimpleGrantedAuthority(user.getRole()));
 
-        return new User(user.getLogin(), user.getPassword(), grantedAuthorities);
+        return new User(user.getUsername(), user.getPassword(), grantedAuthorities);
     }
 }

@@ -5,6 +5,7 @@ import com.web.rpg.dao.AccountManagerDao;
 import com.web.rpg.entity.AccountEntity;
 import com.web.rpg.model.accounts.Account;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,14 +17,18 @@ public class AccountManagerRepository {
 
     private final AccountManagerDao accountManagerDao;
     private final AccountConverter converter;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AccountManagerRepository(AccountManagerDao accountManagerDao, AccountConverter converter) {
+    public AccountManagerRepository(AccountManagerDao accountManagerDao, AccountConverter converter, PasswordEncoder passwordEncoder) {
         this.accountManagerDao = accountManagerDao;
         this.converter = converter;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Account save(Account account) {
+        account.setPassword(passwordEncoder.encode(account.getPassword()));
+        account.setRole(account.getUsername().equalsIgnoreCase("admin") ? "ROLE_ADMIN" : "ROLE_USER");
         return converter.convertFromEntity(accountManagerDao.save(converter.convertToEntity(account)));
     }
 
@@ -47,7 +52,7 @@ public class AccountManagerRepository {
                 .collect(Collectors.toList());
     }
 
-    public Account findByLogin(String login) {
-        return converter.convertFromEntity(accountManagerDao.findAccountEntityByLogin(login));
+    public Account findByUsername(String username) {
+        return converter.convertFromEntity(accountManagerDao.findAccountEntityByUsername(username));
     }
 }

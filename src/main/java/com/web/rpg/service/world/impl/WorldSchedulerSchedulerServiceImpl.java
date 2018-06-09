@@ -9,12 +9,11 @@ import com.web.rpg.model.Items.impl.Item;
 import com.web.rpg.model.Monsters.Monster;
 import com.web.rpg.model.cities.City;
 import com.web.rpg.service.character.CharacterService;
-import com.web.rpg.service.shared.util.HealingCharacterUtil;
 import com.web.rpg.service.cities.CityService;
 import com.web.rpg.service.items.ItemService;
 import com.web.rpg.service.monster.MonsterService;
+import com.web.rpg.service.shared.util.HealingCharacterUtil;
 import com.web.rpg.service.world.Event;
-import com.web.rpg.service.world.EventDetails;
 import com.web.rpg.service.world.WorldSchedulerService;
 import com.web.rpg.service.world.util.ItemGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +58,6 @@ public class WorldSchedulerSchedulerServiceImpl implements WorldSchedulerService
 
     private static final Random RANDOM = new Random();
     private static final List<Event> EVENTS = Arrays.asList(Event.values());
-    private static final List<EventDetails> EVENT_DETAILS = Arrays.asList(EventDetails.values());
 
     @Override
     public void changeWorldStatement() {
@@ -104,6 +102,8 @@ public class WorldSchedulerSchedulerServiceImpl implements WorldSchedulerService
     private void sleep(PlayerCharacter character) {
         character.setHitPoints(character.getMaxHitPoints());
         character.setManaPoints(character.getMaxManaPoints());
+        String currentAction = "I am sleep, wait";
+        character.setCurrentAction(currentAction);
         characterService.save(character);
     }
 
@@ -111,6 +111,10 @@ public class WorldSchedulerSchedulerServiceImpl implements WorldSchedulerService
         Monster monster = monsterService.prepearMonsterForBattle(character);
         character.setMonster(monster);
         monsterService.updateOrCreate(monster);
+        String currentAction = "Fighting with " + monster.getName() +
+                ", " +
+                (int)monster.getHitPoint() + "hp";
+        character.setCurrentAction(currentAction);
         character.setCountToEndOfAction(1);
         characterService.save(character);
     }
@@ -122,7 +126,7 @@ public class WorldSchedulerSchedulerServiceImpl implements WorldSchedulerService
     }
 
     private void progressQuest(PlayerCharacter character) {
-        if (character.getQuest() == null) {
+        if (character.getQuest() == null || character.getStory() == null) {
             eventProcessorService.generateQuest(character);
         } else {
             if (character.getStory().isEnd()) {
@@ -141,7 +145,6 @@ public class WorldSchedulerSchedulerServiceImpl implements WorldSchedulerService
     }
 
     private void travel(PlayerCharacter character) {
-        character.setCurrentAction(EVENT_DETAILS.get(RANDOM.nextInt(EVENT_DETAILS.size())).toString());
         if (character.getTargetCity() == null && character.getCurrentCity() != null) {
             List<City> cities = new ArrayList(character.getCurrentCity().getCitiesNear().keySet());
             City targetCity = cities.get(RANDOM.nextInt(cities.size()));
@@ -190,13 +193,15 @@ public class WorldSchedulerSchedulerServiceImpl implements WorldSchedulerService
         monster.setHitPoint((monster.getHitPoint() - (character.getBaseDamage())));
         character.setHitPoints((character.getHitPoints() + character.getDefence() - monster.getDamage()));
         if (monster.getHitPoint() <= 0) {
-            character.setCountToEndOfAction(0);
+            character.setCountToEndOfAction(-1);
             IntStream.range(0, 100).mapToObj(i -> character).forEach(this::findRandomGoods);
             autoEquip(character, itemGenerator.generateItem(character));
             character.setMonster(null);
+            character.setCurrentAction("Killed a " + monster.getName());
             monsterService.remove(monster);
         } else {
             monsterService.updateOrCreate(monster);
+            character.setCurrentAction("Fighting with " + monster.getName() + ": " + monster.getHitPoint() + "hp");
         }
         characterService.save(character);
     }
