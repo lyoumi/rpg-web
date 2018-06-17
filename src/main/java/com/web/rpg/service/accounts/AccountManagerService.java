@@ -15,4 +15,8 @@ public interface AccountManagerService {
     boolean createAccount(Account account);
 
     boolean verify(Account account);
+
+    List<Account> getAllAccounts();
+
+    void save(Account account);
 }

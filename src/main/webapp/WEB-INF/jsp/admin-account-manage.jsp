@@ -38,7 +38,7 @@
 
 <body>
 
-<form action="<c:url value="profile" />" method="POST">
+<form action="<c:url value="admin/{username}" />" method="POST">
 
     <div class="container">
         <div class="header clearfix">
@@ -67,20 +67,25 @@
                 <sec:csrfInput/>
                 <fieldset>
                     <h1>
-                        Login: ${account.username}
+                        Login:
                     </h1>
+                    <form:input path="username" id="username"/>
                     <h2>
-                        Name: ${account.userInfo.name}
+                        Name:
                     </h2>
+                    <form:input path="userInfo.name" id="name"/>
                     <h2>
-                        Surname: ${account.userInfo.surName}
+                        Surname:
                     </h2>
+                    <form:input path="userInfo.surName" id="surName"/>
                     <h2>
-                        Email: ${account.userInfo.email}
+                        Email:
                     </h2>
+                    <form:input path="userInfo.email" id="email"/>
                 </fieldset>
             </form:form>
         </div>
+        <p><a class="btn btn-lg btn-success" role="button" href="/admin/${account.username}" type="submit">Save</a></p>
 
 
     </div>

@@ -193,17 +193,32 @@ public class WorldSchedulerSchedulerServiceImpl implements WorldSchedulerService
         monster.setHitPoint((monster.getHitPoint() - (character.getBaseDamage())));
         character.setHitPoints((character.getHitPoints() + character.getDefence() - monster.getDamage()));
         if (monster.getHitPoint() <= 0) {
-            character.setCountToEndOfAction(-1);
-            IntStream.range(0, 100).mapToObj(i -> character).forEach(this::findRandomGoods);
-            autoEquip(character, itemGenerator.generateItem(character));
-            character.setMonster(null);
-            character.setCurrentAction("Killed a " + monster.getName());
+            collectRewards(character, monster);
             monsterService.remove(monster);
         } else {
             monsterService.updateOrCreate(monster);
             character.setCurrentAction("Fighting with " + monster.getName() + ": " + monster.getHitPoint() + "hp");
         }
         characterService.save(character);
+    }
+
+    private void collectRewards(PlayerCharacter character, Monster monster) {
+        character.setCountToEndOfAction(-1);
+        IntStream.range(0, 100).mapToObj(i -> character).forEach(this::findRandomGoods);
+        autoEquip(character, itemGenerator.generateItem(character));
+        character.setExperience(character.getExperience() + monster.getExperience());
+        character.setExpToNextLevel(character.getExpToNextLevel() - monster.getExperience());
+        checkNewLevel(character);
+        character.setMonster(null);
+        character.setCurrentAction("Killed a " + monster.getName());
+    }
+
+    private void checkNewLevel(PlayerCharacter character) {
+        if (character.getExpToNextLevel() < 1) {
+            character.setExpToNextLevel((int) (character.getExperience() / 4));
+            character.setLevel(character.getLevel() + 1);
+            character.setMagicPoint(character.getMagicPoint() + 1);
+        }
     }
 
     private void autoEquip(PlayerCharacter character, Item newItem) {

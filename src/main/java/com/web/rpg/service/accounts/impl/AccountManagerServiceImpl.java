@@ -59,4 +59,14 @@ public class AccountManagerServiceImpl implements AccountManagerService {
             return false;
         }
     }
+
+    @Override
+    public List<Account> getAllAccounts() {
+        return accountManagerRepository.findAll();
+    }
+
+    @Override
+    public void save(Account account) {
+        accountManagerRepository.save(account);
+    }
 }
