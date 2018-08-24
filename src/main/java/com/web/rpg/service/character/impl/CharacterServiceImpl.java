@@ -6,7 +6,6 @@ import com.web.rpg.model.Items.EquipmentSlot;
 import com.web.rpg.model.Items.impl.Item;
 import com.web.rpg.model.Quests.Quest;
 import com.web.rpg.model.abilities.buffs.buffsclasses.ArchersBuff;
-import com.web.rpg.model.abilities.buffs.buffsclasses.ForceOfJedi;
 import com.web.rpg.model.abilities.instants.instantmagics.combat.FireBall;
 import com.web.rpg.repository.CharacterRepository;
 import com.web.rpg.service.character.CharacterService;
@@ -141,8 +140,8 @@ public class CharacterServiceImpl implements CharacterService {
         character.setMaxHitPoints(3000000D);
         character.setManaPoints(300000D);
         character.setMaxManaPoints(3000000D);
-        character.setBaseDamage(300000D);
-        character.setDefence(30000);
+        character.setBaseDamage(1000D);
+        character.setDefence(30);
         character.setItems(new ArrayList<>());
         character.setMagic(new FireBall(80));
         character.setMagicPoint(0);
