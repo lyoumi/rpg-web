@@ -1,4 +1,6 @@
-package com.web.rpg.service.player
+package com.web.rpg.service.player;
+
+import java.util.UUID;
 
 public interface PlayerService {
 

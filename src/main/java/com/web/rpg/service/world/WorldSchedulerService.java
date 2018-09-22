@@ -3,7 +3,7 @@ package com.web.rpg.service.world;
 import org.springframework.stereotype.Component;
 
 @Component
-interface WorldSchedulerService {
+public interface WorldSchedulerService {
     void changeWorldStatement();
 
     void changeCharactersStatements();

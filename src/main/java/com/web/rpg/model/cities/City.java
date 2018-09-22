@@ -20,6 +20,30 @@ public class City implements Serializable {
     @JsonIgnore
     private Map<City, Integer> citiesNear;
 
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Map<City, Integer> getCitiesNear() {
+        return citiesNear;
+    }
+
+    public void setCitiesNear(Map<City, Integer> citiesNear) {
+        this.citiesNear = citiesNear;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
