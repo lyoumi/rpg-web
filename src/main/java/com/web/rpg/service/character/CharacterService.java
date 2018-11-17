@@ -10,7 +10,7 @@ public interface CharacterService {
 
     void processCharacters();
 
-    Integer getCountOfManaBootles(UUID id);
+    Integer getCountOfManaBottles(UUID id);
 
     Integer getCountOfHitPointBootles(UUID id);
 

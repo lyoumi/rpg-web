@@ -46,7 +46,7 @@ public class CharacterServiceImpl implements CharacterService {
     }
 
     @Override
-    public Integer getCountOfManaBootles(UUID id) {
+    public Integer getCountOfManaBottles(UUID id) {
         if (id == null) {
             return null;
         }

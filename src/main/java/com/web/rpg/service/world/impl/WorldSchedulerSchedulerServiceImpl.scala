@@ -1,8 +1,8 @@
 package com.web.rpg.service.world.impl
 
 import java.util
-import java.util.stream.{Collectors, IntStream}
 import java.util.Random
+import java.util.stream.IntStream
 
 import com.web.rpg.events.EventProcessorService
 import com.web.rpg.model.Characters.{CharacterClass, PlayerCharacter}
@@ -16,13 +16,12 @@ import com.web.rpg.service.items.ItemService
 import com.web.rpg.service.monster.MonsterService
 import com.web.rpg.service.shared.util.HealingCharacterUtil
 import com.web.rpg.service.world.Event.{FIGHT, SLEEP, STORY}
-import com.web.rpg.service.world.{Event, WorldSchedulerService}
 import com.web.rpg.service.world.util.ItemGenerator
+import com.web.rpg.service.world.{Event, WorldSchedulerService}
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 import scala.collection.JavaConverters._
-import scala.collection.mutable.ListBuffer
 
 @Service
 class WorldSchedulerSchedulerServiceImpl @Autowired()(
@@ -37,6 +36,10 @@ class WorldSchedulerSchedulerServiceImpl @Autowired()(
 
   private val RANDOM = new Random
   private val EVENTS: List[Event] = Event.values.toList
+
+  private val FIGHT_ACTION = "Fighting with %s: %fhp"
+  private val KILL_ACTION = "Killed a %s"
+  private val SLEEP_ACTION = "I am sleep, wait"
 
   override def changeWorldStatement(): Unit = {
     changeCharactersStatements()
@@ -70,7 +73,7 @@ class WorldSchedulerSchedulerServiceImpl @Autowired()(
   private def sleep(character: PlayerCharacter): PlayerCharacter = {
     character.setHitPoints(character.getMaxHitPoints)
     character.setManaPoints(character.getMaxManaPoints)
-    val currentAction = "I am sleep, wait"
+    val currentAction = SLEEP_ACTION
     character.setCurrentAction(currentAction)
     characterService.save(character)
   }
@@ -79,7 +82,7 @@ class WorldSchedulerSchedulerServiceImpl @Autowired()(
     val monster = monsterService.prepearMonsterForBattle(character)
     character.setMonster(monster)
     monsterService.updateOrCreate(monster)
-    val currentAction = "Fighting with " + monster.getName + ", " + monster.getHitPoint.toInt + "hp"
+    val currentAction = FIGHT_ACTION.format(monster.getName, monster.getHitPoint.toInt)
     character.setCurrentAction(currentAction)
     character.setCountToEndOfAction(1)
     characterService.save(character)
@@ -113,8 +116,7 @@ class WorldSchedulerSchedulerServiceImpl @Autowired()(
       character.setTargetCity(targetCity)
       character.setStepsToCity(character.getCurrentCity.getCitiesNear.get(targetCity))
       character.setCurrentCity(null)
-    }
-    else if (character.getTargetCity == null && character.getCurrentCity == null) {
+    } else if (character.getTargetCity == null && character.getCurrentCity == null) {
       val cities = cityService.findAll
       val targetCity = cities.get(RANDOM.nextInt(cities.size))
       character.setTargetCity(targetCity)
@@ -146,14 +148,14 @@ class WorldSchedulerSchedulerServiceImpl @Autowired()(
       None
     }
     val monster = character.getMonster
-    monster.setHitPoint(monster.getHitPoint - (character.getBaseDamage))
+    monster.setHitPoint(monster.getHitPoint - character.getBaseDamage)
     character.setHitPoints(character.getHitPoints + character.getDefence - monster.getDamage)
     if (monster.getHitPoint <= 0) {
       collectRewards(character, monster)
       monsterService.remove(monster)
     } else {
       monsterService.updateOrCreate(monster)
-      character.setCurrentAction("Fighting with " + monster.getName + ": " + monster.getHitPoint + "hp")
+      character.setCurrentAction(FIGHT_ACTION.format(monster.getName, monster.getHitPoint))
     }
     characterService.save(character)
   }
@@ -166,7 +168,7 @@ class WorldSchedulerSchedulerServiceImpl @Autowired()(
     character.setExpToNextLevel(character.getExpToNextLevel - monster.getExperience)
     checkNewLevel(character)
     character.setMonster(null)
-    character.setCurrentAction("Killed a " + monster.getName)
+    character.setCurrentAction(KILL_ACTION.format(monster.getName))
   }
 
   private def checkNewLevel(character: PlayerCharacter): Unit = {
@@ -180,18 +182,18 @@ class WorldSchedulerSchedulerServiceImpl @Autowired()(
   private def autoEquip(character: PlayerCharacter, newItem: Item): Unit = {
     val equipment: Map[EquipmentSlot, Item] = Map[EquipmentSlot, Item]()
     character.getItems.forEach(item => {
-      equipment.+(item.getSlot -> item)
+      equipment + (item.getSlot -> item)
     })
 
     if (equipment.isEmpty || !equipment.contains(newItem.getSlot)) {
-      equipment.+(newItem.getSlot -> newItem)
+      equipment + (newItem.getSlot -> newItem)
       character.setItems(equipment.values.toList.asJava)
       characterService.save(character)
     }
     else if (newItem.getActivePoints > equipment(newItem.getSlot).getActivePoints) {
       itemService.removeItem(equipment(newItem.getSlot))
       itemService.updateOrCreate(newItem)
-      equipment.+(newItem.getSlot -> newItem)
+      equipment + (newItem.getSlot -> newItem)
       character.setItems(equipment.values.asInstanceOf[util.List[Item]])
       characterService.save(character)
     }
