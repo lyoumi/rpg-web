@@ -57,7 +57,7 @@ public class CharacterServiceImpl implements CharacterService {
     }
 
     @Override
-    public Integer getCountOfHitPointBootles(UUID id) {
+    public Integer getCountOfHitPointBottles(UUID id) {
         if (id == null) {
             return null;
         }

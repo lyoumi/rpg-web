@@ -12,7 +12,7 @@ public interface CharacterService {
 
     Integer getCountOfManaBottles(UUID id);
 
-    Integer getCountOfHitPointBootles(UUID id);
+    Integer getCountOfHitPointBottles(UUID id);
 
     PlayerCharacter createOrUpdateCharacter(PlayerCharacter character);
 
