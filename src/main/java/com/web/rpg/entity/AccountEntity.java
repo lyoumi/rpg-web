@@ -7,13 +7,14 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Document
-public class AccountEntity {
+public class AccountEntity implements Serializable {
 
     @Id
     @Transient
