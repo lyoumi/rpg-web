@@ -2,7 +2,7 @@ package com.web.rpg.service.world.impl
 
 import java.util
 import java.util.Random
-import java.util.stream.IntStream
+import java.util.stream.{Collector, Collectors, IntStream}
 
 import com.web.rpg.events.EventProcessorService
 import com.web.rpg.model.Characters.{CharacterClass, PlayerCharacter}
@@ -22,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 import scala.collection.JavaConverters._
+import scala.collection.mutable
+import scala.collection.mutable.MutableList
 
 @Service
 class WorldSchedulerSchedulerServiceImpl @Autowired()(

@@ -4,13 +4,16 @@ import java.io.IOException
 import java.util
 import java.util.{Properties, Random, UUID}
 
-import scala.collection.mutable.ArrayBuffer
+import scala.collection.JavaConverters._
 import com.web.rpg.model.Characters.{CharacterClass, PlayerCharacter}
 import com.web.rpg.model.Monsters.Monster
 import com.web.rpg.repository.MonsterRepository
 import com.web.rpg.service.monster.MonsterService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+
+import scala.collection.mutable
+import scala.collection.mutable.ArrayBuffer
 
 @Service
 class MonsterServiceImpl @Autowired()(val monsterRepository: MonsterRepository) extends MonsterService {
@@ -60,11 +63,10 @@ class MonsterServiceImpl @Autowired()(val monsterRepository: MonsterRepository) 
         e.printStackTrace()
     }
 
-    val characterNames: ArrayBuffer[String] = ArrayBuffer()
-    prop.entrySet()
-      .forEach((entry: util.Map.Entry[AnyRef, AnyRef]) =>
-        characterNames ++ entry.getValue.toString)
-
-    characterNames(RANDOM.nextInt(characterNames.length))
+    val characterNames: mutable.Set[String] = prop.entrySet()
+      .asScala
+      .map((entry: util.Map.Entry[AnyRef, AnyRef]) => entry.getValue.toString)
+      .collect{case name: String => name}
+    characterNames.toList(RANDOM.nextInt(characterNames.size))
   }
 }
