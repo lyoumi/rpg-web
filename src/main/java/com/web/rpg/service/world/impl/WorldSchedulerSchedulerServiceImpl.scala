@@ -37,7 +37,7 @@ class WorldSchedulerSchedulerServiceImpl @Autowired()(
   private val RANDOM = new Random
   private val EVENTS: List[Event] = Event.values.toList
 
-  private val FIGHT_ACTION = "Fighting with %s: %fhp"
+  private val FIGHT_ACTION = "Fighting with %s: %shp"
   private val KILL_ACTION = "Killed a %s"
   private val SLEEP_ACTION = "I am sleep, wait"
 
@@ -110,8 +110,7 @@ class WorldSchedulerSchedulerServiceImpl @Autowired()(
 
   private def travel(character: PlayerCharacter): Unit = {
     if (character.getTargetCity == null && character.getCurrentCity != null) {
-      val cities: List[City] = List()
-      character.getCurrentCity.getCitiesNear.keySet.forEach((city: City) => cities :+ city)
+      val cities: List[City] = character.getCurrentCity.getCitiesNear.keySet.asScala.toList
       val targetCity: City = cities(RANDOM.nextInt(cities.size))
       character.setTargetCity(targetCity)
       character.setStepsToCity(character.getCurrentCity.getCitiesNear.get(targetCity))
