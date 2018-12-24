@@ -25,23 +25,15 @@ public class MonsterDao {
                 Query.query(Criteria.where("id").is(uuid)), MonsterEntity.class);
     }
 
-//    public boolean exists(UUID uuid) {
-//        return false;
-//    }
-
     public Iterable<Monster> findAll() {
         return mongoTemplate.findAll(Monster.class);
     }
-
-//    public Iterable<Monster> findAll(Iterable<UUID> uuids) {
-//        return null;
-//    }
 
     public long count() {
         return 0;
     }
 
     public void delete(MonsterEntity entity) {
-        mongoTemplate.remove(entity, "monster");
+        mongoTemplate.remove(entity, "monsterEntity");
     }
 }

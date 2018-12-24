@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class WorldScheduler {
 
+    private static final int TIME_TO_ACTION = 5000;
+
     private final WorldSchedulerService worldSchedulerService;
 
     @Autowired
@@ -15,7 +17,7 @@ public class WorldScheduler {
         this.worldSchedulerService = worldSchedulerService;
     }
 
-    @Scheduled(fixedDelay = 5000)
+    @Scheduled(fixedDelay = TIME_TO_ACTION)
     public void scheduleFixedDelayTask(){
         worldSchedulerService.changeWorldStatement();
     }

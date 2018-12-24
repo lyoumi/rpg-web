@@ -2,7 +2,7 @@ package com.web.rpg.service.world.impl
 
 import java.util
 import java.util.Random
-import java.util.stream.{Collector, Collectors, IntStream}
+import java.util.stream.IntStream
 
 import com.web.rpg.events.EventProcessorService
 import com.web.rpg.model.Characters.{CharacterClass, PlayerCharacter}
@@ -15,15 +15,13 @@ import com.web.rpg.service.cities.CityService
 import com.web.rpg.service.items.ItemService
 import com.web.rpg.service.monster.MonsterService
 import com.web.rpg.service.shared.util.HealingCharacterUtil
-import com.web.rpg.service.world.Event.{FIGHT, SLEEP, STORY}
+import com.web.rpg.service.world.util.Event.{FIGHT, SLEEP, STORY}
 import com.web.rpg.service.world.util.ItemGenerator
-import com.web.rpg.service.world.{Event, WorldSchedulerService}
+import com.web.rpg.service.world.WorldSchedulerService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 import scala.collection.JavaConverters._
-import scala.collection.mutable
-import scala.collection.mutable.MutableList
 
 @Service
 class WorldSchedulerSchedulerServiceImpl @Autowired()(
@@ -35,6 +33,8 @@ class WorldSchedulerSchedulerServiceImpl @Autowired()(
                                                        cityService: CityService,
                                                        eventProcessorService: EventProcessorService
                                                      ) extends WorldSchedulerService {
+
+  import com.web.rpg.service.world.util.Event
 
   private val RANDOM = new Random
   private val EVENTS: List[Event] = Event.values.toList
@@ -49,7 +49,9 @@ class WorldSchedulerSchedulerServiceImpl @Autowired()(
 
   override def changeCharactersStatements(): Unit = {
     val characters = characterService.findAll
-    if (characters != null && !characters.isEmpty) characters.forEach(action)
+    if (characters != null && !characters.isEmpty) {
+      characters.forEach(action)
+    }
   }
 
   private def action(character: PlayerCharacter): PlayerCharacter = {
@@ -64,8 +66,9 @@ class WorldSchedulerSchedulerServiceImpl @Autowired()(
           sleep(character)
 
       }
+    } else {
+      continueAction(character)
     }
-    else continueAction(character)
   }
 
   private def continueAction(character: PlayerCharacter): PlayerCharacter = {
@@ -81,7 +84,7 @@ class WorldSchedulerSchedulerServiceImpl @Autowired()(
   }
 
   private def fight(character: PlayerCharacter): PlayerCharacter = {
-    val monster = monsterService.prepearMonsterForBattle(character)
+    val monster = monsterService.prepareMonsterForBattle(character)
     character.setMonster(monster)
     monsterService.updateOrCreate(monster)
     val currentAction = FIGHT_ACTION.format(monster.getName, monster.getHitPoint.toInt)

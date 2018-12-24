@@ -1,4 +1,4 @@
-package com.web.rpg.service.world;
+package com.web.rpg.service.world.util;
 
 public enum Event {
     FIGHT,

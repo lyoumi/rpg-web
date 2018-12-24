@@ -10,7 +10,7 @@ import com.web.rpg.model.abilities.instants.instantmagics.combat.FireBall;
 import com.web.rpg.repository.CharacterRepository;
 import com.web.rpg.service.character.CharacterService;
 import com.web.rpg.service.shared.util.HealingCharacterUtil;
-import com.web.rpg.service.world.Event;
+import com.web.rpg.service.world.util.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 import scala.collection.mutable
-import scala.collection.mutable.ArrayBuffer
 
 @Service
 class MonsterServiceImpl @Autowired()(val monsterRepository: MonsterRepository) extends MonsterService {
@@ -26,22 +25,24 @@ class MonsterServiceImpl @Autowired()(val monsterRepository: MonsterRepository) 
     else monster.setHitPoint(0)
   }
 
-  override def prepearMonsterForBattle(character: PlayerCharacter): Monster = {
+  override def prepareMonsterForBattle(character: PlayerCharacter): Monster = {
     val monster: Monster = new Monster
     monster.setMonsterId(UUID.randomUUID)
-    if (CharacterClass.BERSERK == character.getCharacterClass) monster.setLevel(character.getLevel + 4)
-    else monster.setLevel(character.getLevel + 1)
-    if (character.getLevel > 5) {
+    if (CharacterClass.BERSERK == character.getCharacterClass) {
+      monster.setLevel(character.getLevel + 4)
+    } else {
+      monster.setLevel(character.getLevel + 1)
+    }
+    if (isNotBeginner(character)) {
       monster.setExperience(character.getLevel * 50)
       monster.setHitPoint(monster.getLevel * 150)
       monster.setDamage(monster.getLevel * 40)
-    }
-    else {
+    } else {
       monster.setExperience(character.getLevel * 10)
       monster.setHitPoint(monster.getLevel * 70)
       monster.setDamage(monster.getLevel * 20)
     }
-    monster.setName(generateName)
+    monster.setName(loadName)
     monster
   }
 
@@ -54,7 +55,7 @@ class MonsterServiceImpl @Autowired()(val monsterRepository: MonsterRepository) 
     monsterRepository.findOne(monster.asInstanceOf[Monster].getMonsterId)
   }
 
-  private def generateName: String = {
+  private def loadName: String = {
     val prop: Properties = new Properties
     try
       prop.load(getClass.getClassLoader.getResourceAsStream("properties/monster-names.properties"))
@@ -68,5 +69,9 @@ class MonsterServiceImpl @Autowired()(val monsterRepository: MonsterRepository) 
       .map((entry: util.Map.Entry[AnyRef, AnyRef]) => entry.getValue.toString)
       .collect{case name: String => name}
     characterNames.toList(RANDOM.nextInt(characterNames.size))
+  }
+
+  private def isNotBeginner(character: PlayerCharacter) = {
+    character.getLevel > 5
   }
 }

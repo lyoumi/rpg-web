@@ -6,7 +6,7 @@ import com.web.rpg.model.Quests.Quest;
 import com.web.rpg.model.abilities.Magic;
 import com.web.rpg.model.abilities.buffs.BuffMagic;
 import com.web.rpg.model.cities.City;
-import com.web.rpg.service.world.Event;
+import com.web.rpg.service.world.util.Event;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
